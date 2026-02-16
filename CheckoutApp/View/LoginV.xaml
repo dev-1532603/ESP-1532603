@@ -1,0 +1,68 @@
+﻿<Window x:Class="CheckoutApp.View.LoginV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CheckoutApp.View"
+        xmlns:viewmodel="clr-namespace:CheckoutApp.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Style="{StaticResource MaterialDesignWindow}"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=viewmodel:LoginVM}"
+        Title="LoginV" Height="450" Width="800" Background="Wheat">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <materialDesign:Card Grid.Row="1" Grid.Column="1"
+                     Padding="30"
+                     Margin="10"
+                     Background="White"
+                     UniformCornerRadius="12">
+
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <!-- Header -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <TextBlock Text="Super Cchic"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                       VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Username Field -->
+                <TextBox materialDesign:HintAssist.Hint="Nom d'utilisateur"
+                 Margin="0,5"
+                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 Text="{Binding Username}"
+                 Width="250"/>
+
+                <PasswordBox materialDesign:HintAssist.Hint="Mot de passe"
+                             materialDesign:PasswordBoxAssist.Password="{Binding Password}"
+                             Margin="0,10,0,5"
+                             Width="250"
+                             Style="{StaticResource MaterialDesignOutlinedPasswordBox}"/>
+
+                <!-- Login Button -->
+                <Button Content="Connexion"
+                Margin="0,15,0,5"
+                Width="250"
+                Height="40"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Background="{DynamicResource PrimaryHueMidBrush}"
+                Foreground="Black"
+                Command="{Binding LoginCommand}"/>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</Window>

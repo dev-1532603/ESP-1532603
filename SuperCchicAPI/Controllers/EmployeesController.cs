@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperCchicAPI.Data.Context;
 using SuperCchicLibrary;
+using SuperCchicAPI.Models;
 
 namespace SuperCchicAPI.Controllers
 {
@@ -27,7 +29,25 @@ namespace SuperCchicAPI.Controllers
         {
             return await _context.Employees.ToListAsync();
         }
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult<Employee>> LoginEmployee([FromBody] LoginRequestDTO request)
+        {
+            if(string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Le username et le mot de passe sont requis.");
+            }
 
+            var existingEmployee = await _context.Employees.FirstOrDefaultAsync(e => e.Username == request.Username && e.Password == request.Password);
+
+            if (existingEmployee == null)
+            {
+                return Unauthorized();
+            }
+
+            return existingEmployee;
+
+        }
         // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)
