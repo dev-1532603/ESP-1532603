@@ -1,10 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CheckoutApp.Service;
+using CheckoutApp.View;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SuperCchicAPI.Models;
+using SuperCchicLibrary.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CheckoutApp.ViewModel
 {
@@ -13,7 +18,6 @@ namespace CheckoutApp.ViewModel
         [ObservableProperty]
         private string? _username, _password;
 
-
         public LoginVM()
         {
             Username = string.Empty;
@@ -21,12 +25,20 @@ namespace CheckoutApp.ViewModel
         }
 
         [RelayCommand]
-        public void Login()
+        private async void Login()
         {
             if (string.IsNullOrEmpty(Username?.Trim())) return;
             if (string.IsNullOrEmpty(Password?.Trim())) return;
 
-
+            try
+            {
+                LoginResponseDTO response = await ApiProcessor.Login(Username, Password);
+                MessageBox.Show("Login valide");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Login invalide");
+            }
         }
     }
 }

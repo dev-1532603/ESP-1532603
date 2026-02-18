@@ -30,8 +30,8 @@ namespace SuperCchicAPI.Controllers
             return await _context.Employees.ToListAsync();
         }
         [HttpPost]
-        [Route("login")]
-        public async Task<ActionResult<Employee>> LoginEmployee([FromBody] LoginRequestDTO request)
+        [Route("Login")]
+        public async Task<ActionResult<LoginResponseDTO>> LoginEmployee([FromBody] LoginRequestDTO request)
         {
             if(string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             {
@@ -45,7 +45,9 @@ namespace SuperCchicAPI.Controllers
                 return Unauthorized();
             }
 
-            return existingEmployee;
+            LoginResponseDTO response = new LoginResponseDTO{ Id = existingEmployee.Id, Name = existingEmployee.Name, Username = existingEmployee.Username };
+
+            return response;
 
         }
         // GET: api/Employees/5

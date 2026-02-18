@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckoutApp.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace CheckoutApp.View
     {
         public MainWindow()
         {
+            ApiHelper.InitializeClient();
             InitializeComponent();
         }
     }
