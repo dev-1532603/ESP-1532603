@@ -4,9 +4,216 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CheckoutApp.View"
+             xmlns:viewmodel="clr-namespace:CheckoutApp.ViewModel"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             d:DataContext="{d:DesignInstance Type=viewmodel:TransactionVM}"
+             d:DesignHeight="450" d:DesignWidth="800" Background="White">
+    <materialDesign:Card Margin="5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Menu du haut -->
+            <Button Content="Déconnexion" 
+                Style="{StaticResource MaterialDesignRaisedButton}" 
+                Background="{DynamicResource PrimaryHueMidBrush}" 
+                Foreground="Black"
+                Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Label Content="Utilisateur"  Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <Label Content="Transaction en cours"  Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+
+            <!--Section des actions de transaction-->
+            <GroupBox Grid.Row="1" Grid.Column="1" Style="{StaticResource MaterialDesignCardGroupBox}" Margin="5">
+                <GroupBox.Header>
+                    <Border Background="{DynamicResource PrimaryHueMidBrush}"
+                        CornerRadius="5">
+                        <TextBlock Text="Actions"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       FontSize="14"/>
+                    </Border>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--Rangée 1-->
+                    <Button Grid.Column="0" Grid.Row="0" 
+                    Style="{StaticResource  MaterialDesignRaisedButton}" 
+                    Background="{DynamicResource PrimaryHueMidBrush}"
+                    Foreground="Black"
+                    Margin="5" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Rabais employé" 
+                               FontSize="12"
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                    </Button>
+
+                    <Button  Grid.Column="1" Grid.Row="0" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" 
+                    Background="{DynamicResource PrimaryHueMidBrush}" 
+                    Foreground="Black"
+                    Margin="5" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Recherche de produit"
+                               FontSize="12"
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                    </Button>
+
+                    <!--Rangée 2-->
+                    <Button Grid.Column="0" Grid.Row="1" 
+                    Style="{StaticResource MaterialDesignRaisedButton}" 
+                    Background="{DynamicResource PrimaryHueMidBrush}" 
+                    Foreground="Black"
+                    Margin="5" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Réimprimer la facture" 
+                               FontSize="12"
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                    </Button>
+
+                    <Button Grid.Column="1" Grid.Row="1"
+                     Style="{StaticResource MaterialDesignRaisedButton}" 
+                     Background="{DynamicResource PrimaryHueMidBrush}" 
+                     Foreground="Black"
+                     Margin="5" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Modifier la quantité" 
+                               FontSize="12"
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                    </Button>
+
+                    <!--Rangée 3-->
+                    <Button Grid.Column="0" Grid.Row="2"
+                      Style="{StaticResource MaterialDesignRaisedButton}" 
+                      Background="{DynamicResource PrimaryHueMidBrush}" 
+                      Foreground="Black"
+                      Margin="5" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Ajouter un commentaire"
+                               FontSize="12"
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                    </Button>
+
+                    <Button Grid.Column="1" Grid.Row="2" 
+                      Style="{StaticResource MaterialDesignRaisedButton}" 
+                      Background="{DynamicResource PrimaryHueMidBrush}" 
+                      Foreground="Black"
+                      Margin="5" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Retirer un produit" 
+                               FontSize="12"
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                    </Button>
+                </Grid>
+            </GroupBox>
+
+            <!--Panneau de produits de la transaction-->
+            <Border Grid.Row="1" Grid.Column="2" Margin="5" BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Liste des produits" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <ListBox ItemsSource="{Binding TransactionItems}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{Binding ProductName}" />
+                                    <Label Content=" - " />
+                                    <Label Content="{Binding Quantity}" />
+                                    <Label Content=" x " />
+                                    <Label Content="{Binding UnitPrice}" />
+                                    <Label Content="$" />
+                                    <Label Content=" = " />
+                                    <Label Content="{Binding TotalPrice}" />
+                                    <Label Content="$" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+
+            <!--Panneau d'informations de la transaction-->
+            <Border Grid.Row="2" Grid.Column="2" Margin="5" BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Montants de la transaction -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Sous-total :" FontWeight="Bold" />
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SubTotal}" 
+                   HorizontalAlignment="Right"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="TPS :" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TpsAmount}"
+                   HorizontalAlignment="Right"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="TVQ :" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TvqAmount}"
+                   HorizontalAlignment="Right"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Total :" FontWeight="Bold" />
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GrandTotal}"
+                   FontWeight="Bold" HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+
+
+            <!-- Section pour finaliser la transaction -->
+            <Grid Grid.Row="3" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--Bouton annuler la transaction-->
+                <Button
+                Grid.Column="0"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Background="Red"
+                Foreground="White"
+                HorizontalAlignment="Left"
+                Margin="5">
+                    <TextBlock Text="Annuler" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+
+                <!--Bouton passer au paiement-->
+                <Button
+                Grid.Column="1"
+                Style="{StaticResource MaterialDesignRaisedButton}" 
+                Background="Green"
+                Foreground="White"
+                HorizontalAlignment="Stretch"
+                Margin="5">
+                    <TextBlock Text="Passer au paiement" 
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </materialDesign:Card>
 </UserControl>

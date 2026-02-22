@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace CheckoutApp.View
 {
     /// <summary>
-    /// Logique d'interaction pour TransactionV.xaml
+    /// Interaction logic for DiscountV.xaml
     /// </summary>
-    public partial class TransactionV : UserControl
+    public partial class DiscountV : UserControl
     {
-        public TransactionV()
+        public DiscountV()
         {
             InitializeComponent();
-            this.DataContext = new ViewModel.TransactionVM();
         }
     }
 }

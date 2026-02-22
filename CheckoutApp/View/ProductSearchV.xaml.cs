@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace CheckoutApp.View
 {
     /// <summary>
-    /// Logique d'interaction pour TransactionV.xaml
+    /// Interaction logic for ProductSearchV.xaml
     /// </summary>
-    public partial class TransactionV : UserControl
+    public partial class ProductSearchV : UserControl
     {
-        public TransactionV()
+        public ProductSearchV()
         {
             InitializeComponent();
-            this.DataContext = new ViewModel.TransactionVM();
         }
     }
 }

@@ -33,7 +33,11 @@ namespace CheckoutApp.ViewModel
             try
             {
                 LoginResponseDTO response = await ApiProcessor.Login(Username, Password);
-                MessageBox.Show("Login valide");
+                MessageBox.Show("Connexion réussie.");
+                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+                mainWindow.transactionV.Visibility = Visibility.Visible;
+
+
             }
             catch (Exception ex)
             {

@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Background="Wheat">
     <Grid>
-        <local:LoginV Visibility="Visible" x:Name="loginView"/>
+        <local:LoginV Visibility="Visible" x:Name="loginV"/>
+        <local:TransactionV Visibility="Collapsed" x:Name="transactionV"/>
     </Grid>
 </Window>
