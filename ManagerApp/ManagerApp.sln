@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerApp", "ManagerApp.csproj", "{0F9B5F45-DAA7-4050-B765-BB592651AB83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperCchicLibrary", "..\SuperCchicLibrary\SuperCchicLibrary\SuperCchicLibrary.csproj", "{A025807F-F67C-B464-16E3-F7C2D87AEC24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F9B5F45-DAA7-4050-B765-BB592651AB83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F9B5F45-DAA7-4050-B765-BB592651AB83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F9B5F45-DAA7-4050-B765-BB592651AB83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F9B5F45-DAA7-4050-B765-BB592651AB83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A025807F-F67C-B464-16E3-F7C2D87AEC24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A025807F-F67C-B464-16E3-F7C2D87AEC24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A025807F-F67C-B464-16E3-F7C2D87AEC24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A025807F-F67C-B464-16E3-F7C2D87AEC24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7CB35E2-926E-4DE7-96E2-645F436DC726}
+	EndGlobalSection
+EndGlobal
