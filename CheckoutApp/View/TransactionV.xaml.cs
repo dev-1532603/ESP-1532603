@@ -25,5 +25,15 @@ namespace CheckoutApp.View
             InitializeComponent();
             this.DataContext = new ViewModel.TransactionVM();
         }
+
+        private void DiscountButton_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).ShowDiscountView();
+        }
+
+        private void SearchProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).ShowProductSearchView();
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace CheckoutApp.View
         {
             InitializeComponent();
         }
+
+        private void BackToTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).ShowTransactionView();
+        }
     }
 }

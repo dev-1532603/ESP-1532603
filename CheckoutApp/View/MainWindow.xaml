@@ -1,20 +1,22 @@
-﻿<Window
-    x:Class="CheckoutApp.View.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CheckoutApp.View"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
-    Width="800"
-    Height="450"
-    Background="White"
-    Style="{StaticResource MaterialDesignWindow}"
-    mc:Ignorable="d">
+﻿<Window x:Class="CheckoutApp.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:CheckoutApp.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="MainWindow"
+        Width="1280"
+        Height="720"
+        MinWidth="1280"
+        MinHeight="720"
+        Background="White"
+        Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
     <Grid>
-        <local:LoginV x:Name="loginV" Visibility="Visible" />
-        <local:TransactionV x:Name="transactionV" Visibility="Collapsed" />
+        <local:LoginV x:Name="loginV" Visibility="Collapsed" />
+        <local:TransactionV x:Name="transactionV" Visibility="Visible" />
         <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed" />
         <local:DiscountV x:Name="discountV" Visibility="Collapsed" />
     </Grid>

@@ -27,10 +27,10 @@ namespace SuperCchicLibrary
         [Column("id_subcategory")]
         [ForeignKey(nameof(Subcategory))]
         public int IdSubcategory { get; set; }
-        public string? Subcategory { get; set; }
+        public Subcategory? Subcategory { get; set; }
 
         public Product () { }
-        public Product(int id, string code, string name, double price, int quantityInStock, bool taxable, int idSubcategory, string? subcategory)
+        public Product(int id, string code, string name, double price, int quantityInStock, bool taxable, int idSubcategory, Subcategory? subcategory)
         {
             Id = id;
             Code = code;

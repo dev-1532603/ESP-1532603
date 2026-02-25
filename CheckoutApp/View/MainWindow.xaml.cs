@@ -25,5 +25,36 @@ namespace CheckoutApp.View
             ApiHelper.InitializeClient();
             InitializeComponent();
         }
+        private void HideAllViews()
+        {
+            loginV.Visibility = Visibility.Collapsed;
+            transactionV.Visibility = Visibility.Collapsed;
+            productSearchV.Visibility = Visibility.Collapsed;
+            discountV.Visibility = Visibility.Collapsed;
+        }
+
+        public void ShowLoginView()
+        {
+            HideAllViews();
+            loginV.Visibility = Visibility.Visible;
+        }
+
+        public void ShowTransactionView()
+        {
+            HideAllViews();
+            transactionV.Visibility = Visibility.Visible;
+        }
+
+        public void ShowProductSearchView()
+        {
+            HideAllViews();
+            productSearchV.Visibility = Visibility.Visible;
+        }
+
+        public void ShowDiscountView()
+        {
+            HideAllViews();
+            discountV.Visibility = Visibility.Visible;
+        }
     }
 }

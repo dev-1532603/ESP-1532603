@@ -23,6 +23,11 @@ namespace CheckoutApp.View
         public ProductSearchV()
         {
             InitializeComponent();
+            this.DataContext = new ViewModel.ProductSearchVM();
+        }
+        private void BackToTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).ShowTransactionView();
         }
     }
 }
