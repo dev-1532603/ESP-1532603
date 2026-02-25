@@ -1,4 +1,5 @@
 ﻿using CheckoutApp.Service;
+using CheckoutApp.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,20 @@ namespace CheckoutApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        public TransactionVM TransactionVM { get; }
+        public ProductSearchVM ProductSearchVM { get; }
+        public DiscountVM DiscountVM { get; }
         public MainWindow()
         {
             ApiHelper.InitializeClient();
-            InitializeComponent();
+            InitializeComponent(); 
+
+            TransactionVM = new TransactionVM();
+            ProductSearchVM = new ProductSearchVM();
+            DiscountVM = new DiscountVM();
+
+            ProductSearchVM.SetAddToCartAction(TransactionVM.AddToTransaction);
+            DiscountVM.SetApplyTransactionDiscount(TransactionVM.ApplyTransactionDiscount);
         }
         private void HideAllViews()
         {
@@ -42,18 +53,21 @@ namespace CheckoutApp.View
         public void ShowTransactionView()
         {
             HideAllViews();
-            transactionV.Visibility = Visibility.Visible;
+            transactionV.DataContext = TransactionVM;
+            transactionV.Visibility = Visibility.Visible; 
         }
 
         public void ShowProductSearchView()
         {
             HideAllViews();
+            productSearchV.DataContext = ProductSearchVM;
             productSearchV.Visibility = Visibility.Visible;
         }
 
         public void ShowDiscountView()
         {
             HideAllViews();
+            discountV.DataContext = DiscountVM;
             discountV.Visibility = Visibility.Visible;
         }
     }

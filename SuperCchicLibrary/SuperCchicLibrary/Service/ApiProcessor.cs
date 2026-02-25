@@ -32,9 +32,28 @@ namespace SuperCchicLibrary.Service
                 }
             }
         }
-        public static Task<List<ProductDTO>> GetProducts()
+        public static Task<List<ProductDTO>> GetAllProductsInfos()
         {
             string url = "Products";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return task.Result.Content.ReadAsAsync<List<ProductDTO>>();
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+        public static Task<List<ProductDTO>> SearchProducts(string searchText)
+        {
+            string url = $"Products/Search/{searchText}";
+
+
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
             {
@@ -57,6 +76,38 @@ namespace SuperCchicLibrary.Service
                 if (task.Result.IsSuccessStatusCode)
                 {
                     return task.Result.Content.ReadAsAsync<List<EmployeeDTO>>();
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+        public static Task<List<Subcategory>> GetSubcategories()
+        {
+            string url = "Subcategories";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return task.Result.Content.ReadAsAsync<List<Subcategory>>();
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+        public static Task<List<Category>> GetCategories()
+        {
+            string url = "Categories";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return task.Result.Content.ReadAsAsync<List<Category>>();
                 }
                 else
                 {

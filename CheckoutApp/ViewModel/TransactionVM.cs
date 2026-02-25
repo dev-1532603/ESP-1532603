@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SuperCchicAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,8 @@ namespace CheckoutApp.ViewModel
     {
         [ObservableProperty]
         private ObservableCollection<TransactionItem> transactionItems = new ObservableCollection<TransactionItem>();
+        [ObservableProperty]
+        private decimal subtotal, tps, tvq, transactionTotal;
         public struct TransactionItem
         {
             public string ProductName { get; set; }
@@ -19,7 +22,20 @@ namespace CheckoutApp.ViewModel
             public decimal UnitPrice { get; set; }
             public decimal TotalPrice => UnitPrice * Quantity;
         }
-
+        public void AddToTransaction(ProductDTO product)
+        {
+            var item = new TransactionItem
+            {
+                ProductName = product.Name,
+                UnitPrice = product.Price,
+                Quantity = product.QuantityInStock,
+            };
+            TransactionItems.Add(item);
+        }
+        public void ApplyTransactionDiscount(EmployeeDTO employee)
+        {
+            
+        }
         public TransactionVM() { }
 
     }

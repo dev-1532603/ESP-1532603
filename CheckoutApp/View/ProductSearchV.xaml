@@ -56,7 +56,7 @@
                       GridLinesVisibility="Horizontal"
                       HeadersVisibility="Column"
                       IsReadOnly="True"
-                      ItemsSource="{Binding ProductSearchResults}"
+                      ItemsSource="{Binding SearchResults}"
                       SelectedItem="{Binding SelectedProduct}"
                       SelectionMode="Single">
 
@@ -71,13 +71,13 @@
                                         Binding="{Binding Price, StringFormat=C}"
                                         Header="Prix" />
                     <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Stock}"
+                                        Binding="{Binding QuantityInStock}"
                                         Header="Stock" />
                     <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Subcategory}"
+                                        Binding="{Binding Subcategory.Name}"
                                         Header="Sous-catégorie" />
                     <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Category}"
+                                        Binding="{Binding Subcategory.Category.Name}"
                                         Header="Catégorie" />
                 </DataGrid.Columns>
             </DataGrid>
@@ -92,6 +92,7 @@
                         HorizontalAlignment="Left"
                         Background="Red"
                         Foreground="White"
+                        Click="BackToTransaction_Click"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Annuler"
                                TextAlignment="Center"
@@ -102,6 +103,7 @@
                         HorizontalAlignment="Stretch"
                         Background="Green"
                         Foreground="White"
+                        Command="{Binding ConfirmCartAdditionCommand}"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Confirmer"
                                TextAlignment="Center"

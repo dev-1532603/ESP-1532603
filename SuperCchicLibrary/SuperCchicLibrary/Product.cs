@@ -19,7 +19,7 @@ namespace SuperCchicLibrary
         [Column("name")]
         public string Name { get; set; } = string.Empty;
         [Column("price")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         [Column("quantity_in_stock")]
         public int QuantityInStock { get; set; }
         [Column("taxable")]
@@ -30,7 +30,7 @@ namespace SuperCchicLibrary
         public Subcategory? Subcategory { get; set; }
 
         public Product () { }
-        public Product(int id, string code, string name, double price, int quantityInStock, bool taxable, int idSubcategory, Subcategory? subcategory)
+        public Product(int id, string code, string name, decimal price, int quantityInStock, bool taxable, int idSubcategory, Subcategory? subcategory)
         {
             Id = id;
             Code = code;

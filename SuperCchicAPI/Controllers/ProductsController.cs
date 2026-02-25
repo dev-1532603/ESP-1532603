@@ -25,7 +25,16 @@ namespace SuperCchicAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.Include(p => p.Subcategory).ThenInclude(s => s.Category).ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/Search/{searchText}")]
+        public async Task<ActionResult<IEnumerable<Product>>> SearchProducts(string searchText)
+        {
+            var products = await _context.Products.Where(p => p.Name.Contains(searchText)).ToListAsync();
+
+            return products;
         }
 
         // GET: api/Products/5

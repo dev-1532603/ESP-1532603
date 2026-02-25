@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CheckoutApp.ViewModel;
 
 namespace CheckoutApp.View
 {
@@ -23,7 +24,6 @@ namespace CheckoutApp.View
         public TransactionV()
         {
             InitializeComponent();
-            this.DataContext = new ViewModel.TransactionVM();
         }
 
         private void DiscountButton_Click(object sender, RoutedEventArgs e)
