@@ -35,7 +35,6 @@ namespace CheckoutApp.ViewModel
                 LoginResponseDTO response = await ApiProcessor.Login(Username, Password);
                 MessageBox.Show("Connexion réussie.");
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();
-
             }
             catch (Exception ex)
             {

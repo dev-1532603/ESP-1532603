@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CheckoutApp.View;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SuperCchicAPI.Models;
 using SuperCchicLibrary;
@@ -43,6 +44,7 @@ namespace CheckoutApp.ViewModel
             if(SelectedEmployee != null && _applyTransactionDiscount != null)
             {
                 _applyTransactionDiscount(SelectedEmployee);
+                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
             }
         }
         partial void OnSearchTextChanged(string? oldValue, string? newValue)

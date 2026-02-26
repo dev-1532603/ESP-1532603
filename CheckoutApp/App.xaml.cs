@@ -9,6 +9,6 @@ namespace CheckoutApp
     /// </summary>
     public partial class App : Application
     {
-    }
 
+    }
 }

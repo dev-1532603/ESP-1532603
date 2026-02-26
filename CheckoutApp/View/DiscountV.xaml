@@ -29,9 +29,9 @@
                 <Button Margin="5"
                         HorizontalAlignment="Left"
                         Background="{DynamicResource PrimaryHueMidBrush}"
+                        Click="BackToTransaction_Click"
                         Content="Retour"
                         Foreground="Black"
-                        Click="BackToTransaction_Click"
                         Style="{StaticResource MaterialDesignRaisedButton}" />
                 <!--  Titre  -->
                 <TextBlock Grid.Row="0"
@@ -82,8 +82,8 @@
                         Margin="5"
                         HorizontalAlignment="Left"
                         Background="Red"
-                        Foreground="White"
                         Click="BackToTransaction_Click"
+                        Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Annuler"
                                TextAlignment="Center"
@@ -94,8 +94,8 @@
                         Margin="5"
                         HorizontalAlignment="Stretch"
                         Background="Green"
-                        Foreground="White"
                         Command="{Binding ApplyEmployeeDiscountCommand}"
+                        Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Confirmer"
                                TextAlignment="Center"

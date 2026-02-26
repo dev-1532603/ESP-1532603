@@ -18,6 +18,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Button Margin="5"
@@ -40,12 +41,6 @@
                      materialDesign:HintAssist.Hint="Rechercher le nom, code ou catégorie du produit..."
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
-
-            <!--<ComboBox SelectedItem="{Binding SelectedFilter}">
-                <ComboBoxItem Content="All" />
-                <ComboBoxItem Content="Active" />
-                <ComboBoxItem Content="Inactive" />
-            </ComboBox>-->
 
             <!--  Tableau des résultats  -->
             <DataGrid Grid.Row="2"
@@ -91,8 +86,8 @@
                         Margin="5"
                         HorizontalAlignment="Left"
                         Background="Red"
-                        Foreground="White"
                         Click="BackToTransaction_Click"
+                        Foreground="White"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Annuler"
                                TextAlignment="Center"
@@ -102,8 +97,8 @@
                         Margin="5"
                         HorizontalAlignment="Stretch"
                         Background="Green"
+                        Command="{Binding AddToTransactionCommand}"
                         Foreground="White"
-                        Command="{Binding ConfirmCartAdditionCommand}"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Confirmer"
                                TextAlignment="Center"
@@ -112,4 +107,5 @@
             </StackPanel>
         </Grid>
     </materialDesign:Card>
+
 </UserControl>

@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CheckoutApp.View;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
 using SuperCchicAPI.Models;
 using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
@@ -36,11 +38,12 @@ namespace CheckoutApp.ViewModel
             _addToCart = callback;
         }
         [RelayCommand]
-        public void ConfirmCartAddition()
+        public void AddToTransaction()
         {
             if(SelectedProduct != null && _addToCart != null)
             {
                 _addToCart(SelectedProduct);
+                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
             }
         }
 

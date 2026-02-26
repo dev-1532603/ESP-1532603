@@ -21,20 +21,28 @@ namespace CheckoutApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        public TransactionVM TransactionVM { get; }
-        public ProductSearchVM ProductSearchVM { get; }
-        public DiscountVM DiscountVM { get; }
+        public TransactionVM _transactionVM;
+        public ProductSearchVM _productSearchVM;
+        public DiscountVM _discountVM;
         public MainWindow()
         {
+            InitializeComponent();    
+            Initialize();
+        }
+        private void Initialize()
+        {
             ApiHelper.InitializeClient();
-            InitializeComponent(); 
 
-            TransactionVM = new TransactionVM();
-            ProductSearchVM = new ProductSearchVM();
-            DiscountVM = new DiscountVM();
+            _transactionVM = new TransactionVM();
+            _productSearchVM = new ProductSearchVM();
+            _discountVM = new DiscountVM();
 
-            ProductSearchVM.SetAddToCartAction(TransactionVM.AddToTransaction);
-            DiscountVM.SetApplyTransactionDiscount(TransactionVM.ApplyTransactionDiscount);
+            transactionV.DataContext = _transactionVM;
+            productSearchV.DataContext = _productSearchVM;
+            discountV.DataContext = _discountVM;
+
+            _productSearchVM.SetAddToCartAction(_transactionVM.AddToTransaction);
+            _discountVM.SetApplyTransactionDiscount(_transactionVM.ApplyTransactionDiscount);
         }
         private void HideAllViews()
         {
@@ -53,21 +61,18 @@ namespace CheckoutApp.View
         public void ShowTransactionView()
         {
             HideAllViews();
-            transactionV.DataContext = TransactionVM;
             transactionV.Visibility = Visibility.Visible; 
         }
 
         public void ShowProductSearchView()
         {
             HideAllViews();
-            productSearchV.DataContext = ProductSearchVM;
             productSearchV.Visibility = Visibility.Visible;
         }
 
         public void ShowDiscountView()
         {
             HideAllViews();
-            discountV.DataContext = DiscountVM;
             discountV.Visibility = Visibility.Visible;
         }
     }

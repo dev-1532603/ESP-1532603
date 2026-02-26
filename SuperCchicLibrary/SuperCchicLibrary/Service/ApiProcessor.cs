@@ -14,9 +14,7 @@ namespace SuperCchicLibrary.Service
         public static Task<LoginResponseDTO> Login(string username, string password)
         {
             string url = "Employees/Login";
-
             string json = JsonConvert.SerializeObject(new { username, password });
-
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -36,7 +34,6 @@ namespace SuperCchicLibrary.Service
         {
             string url = "Products";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-
             using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
             {
                 if (task.Result.IsSuccessStatusCode)
@@ -52,8 +49,6 @@ namespace SuperCchicLibrary.Service
         public static Task<List<ProductDTO>> SearchProducts(string searchText)
         {
             string url = $"Products/Search/{searchText}";
-
-
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
             {

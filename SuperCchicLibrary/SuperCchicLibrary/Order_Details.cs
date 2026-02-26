@@ -16,7 +16,7 @@ namespace SuperCchicLibrary
         [Column("id_order_details")]
         public int Id { get; set; }
         [Column("unit_price")]
-        public double UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; }
         [Column("id_product")]
         [ForeignKey(nameof(Product))]
         public int IdProduct { get; set; }
@@ -28,7 +28,7 @@ namespace SuperCchicLibrary
 
         public Order_Details() { }
 
-        public Order_Details(int id, double unitPrice, int idProduct, Product? product, int idOrder, Order? order)
+        public Order_Details(int id, decimal unitPrice, int idProduct, Product? product, int idOrder, Order? order)
         {
             Id = id;
             UnitPrice = unitPrice;
