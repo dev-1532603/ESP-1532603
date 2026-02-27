@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SuperCchicLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;

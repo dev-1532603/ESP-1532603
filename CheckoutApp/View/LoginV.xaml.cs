@@ -1,4 +1,4 @@
-﻿using CheckoutApp.Service;
+﻿using SuperCchicLibrary.Service;
 using CheckoutApp.ViewModel;
 using System;
 using System.Collections.Generic;

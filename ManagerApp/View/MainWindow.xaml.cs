@@ -11,17 +11,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SuperCchicLibrary.Service;
+using ManagerApp.ViewModel;
 
 namespace ManagerApp.View
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
+            ApiHelper.InitializeClient();
+
             InitializeComponent();
+
+            productV.DataContext = new ProductVM();
         }
     }
 }

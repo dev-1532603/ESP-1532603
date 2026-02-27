@@ -6,171 +6,251 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodel="clr-namespace:ManagerApp.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:ProductVM}"
              d:DesignHeight="450"
              d:DesignWidth="800"
              Background="White"
              mc:Ignorable="d">
+    <materialDesign:DialogHost CloseOnClickAway="True" IsOpen="{Binding IsDialogOpen}">
+        <materialDesign:DialogHost.DialogContent>
+            <StackPanel MinWidth="300" Margin="20">
+                <TextBlock Margin="5"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Text="{Binding DialogTitle}" />
+                <TextBlock Margin="5"
+                           FontSize="12"
+                           FontStyle="Italic"
+                           Foreground="Gray"
+                           Text="{Binding DialogMessage}" />
+                <TextBox Margin="5"
+                         materialDesign:HintAssist.Hint="Code"
+                         IsReadOnly="{Binding IsDialogReadOnly}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DialogCode, UpdateSourceTrigger=PropertyChanged}" />
 
-    <materialDesign:Card Margin="5">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+                <TextBox Margin="5"
+                         materialDesign:HintAssist.Hint="Nom"
+                         IsReadOnly="{Binding IsDialogReadOnly}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DialogName, UpdateSourceTrigger=PropertyChanged}" />
 
-            <!--  Menu du haut  -->
-            <StackPanel Grid.Row="0"
-                        Grid.Column="0"
-                        HorizontalAlignment="Left"
-                        Orientation="Horizontal">
-                <Button Margin="5"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryHueMidBrush}"
-                        Content="Déconnexion"
-                        Foreground="Black"
-                        Style="{StaticResource MaterialDesignRaisedButton}" />
-                <Label HorizontalAlignment="Center"
+                <TextBox Margin="5"
+                         materialDesign:HintAssist.Hint="Prix"
+                         IsReadOnly="{Binding IsDialogReadOnly}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DialogPrice, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox Margin="5"
+                         materialDesign:HintAssist.Hint="Quantité en stock"
+                         IsReadOnly="{Binding IsDialogReadOnly}"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DialogQuantityInStock, UpdateSourceTrigger=PropertyChanged}" />
+
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock Margin="5"
+                               VerticalAlignment="Center"
+                               Text="Taxable" />
+                    <ToggleButton IsChecked="{Binding DialogTaxable}"
+                                  IsEnabled="{Binding IsDialogToggleable}"
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                </StackPanel>
+
+                <ComboBox Margin="5"
+                          materialDesign:HintAssist.Hint="Sous-catégorie"
+                          DisplayMemberPath="Name"
+                          IsEnabled="{Binding IsDialogToggleable}"
+                          IsReadOnly="{Binding IsDialogReadOnly}"
+                          ItemsSource="{Binding Subcategories}"
+                          SelectedItem="{Binding DialogSubcategory}"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button Margin="5"
+                            Background="Red"
+                            Command="{Binding CancelDialogCommand}"
+                            Content="Annuler"
+                            Foreground="White"
+                            Style="{StaticResource MaterialDesignRaisedButton}" />
+                    <Button Background="Green"
+                            Command="{Binding ConfirmDialogCommand}"
+                            Content="Confirmer"
+                            Foreground="White"
+                            Style="{StaticResource MaterialDesignRaisedButton}" />
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:DialogHost.DialogContent>
+        <materialDesign:Card Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--  Menu du haut  -->
+                <StackPanel Grid.Row="0"
+                            Grid.Column="0"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal">
+                    <Button Margin="5"
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource PrimaryHueMidBrush}"
+                            Content="Déconnexion"
+                            Foreground="Black"
+                            Style="{StaticResource MaterialDesignRaisedButton}" />
+                    <Label HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Content="Utilisateur"
+                           FontSize="16"
+                           FontWeight="Bold" />
+                </StackPanel>
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Content="Utilisateur"
+                       Content="Liste des produits"
                        FontSize="16"
                        FontWeight="Bold" />
-            </StackPanel>
-            <Label Grid.Row="0"
-                   Grid.Column="1"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Content="Liste des produits"
-                   FontSize="16"
-                   FontWeight="Bold" />
 
-            <!--  Recherche de produit  -->
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Rechercher un produit"
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                <!--  Recherche de produit  -->
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Margin="5"
+                         materialDesign:HintAssist.Hint="Rechercher un produit"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-            <!--  Section des actions administrative  -->
-            <GroupBox Grid.Row="1"
-                      Grid.RowSpan="2"
-                      Grid.Column="0"
-                      Margin="5"
-                      Style="{StaticResource MaterialDesignCardGroupBox}">
-                <GroupBox.Header>
-                    <Border Background="{DynamicResource PrimaryHueMidBrush}" CornerRadius="5">
-                        <TextBlock FontSize="14"
-                                   FontWeight="Bold"
-                                   Foreground="White"
-                                   Text="Actions" />
-                    </Border>
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+                <!--  Section des actions administrative  -->
+                <GroupBox Grid.Row="1"
+                          Grid.RowSpan="2"
+                          Grid.Column="0"
+                          Margin="5"
+                          Style="{StaticResource MaterialDesignCardGroupBox}">
+                    <GroupBox.Header>
+                        <Border Background="{DynamicResource PrimaryHueMidBrush}" CornerRadius="5">
+                            <TextBlock FontSize="14"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Text="Actions" />
+                        </Border>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
-                    <!--  Rangée 1  -->
-                    <Button Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource PrimaryHueMidBrush}"
-                            Foreground="Black"
-                            Style="{StaticResource MaterialDesignRaisedButton}">
-                        <TextBlock FontSize="12"
-                                   Text="Ajouter un produit"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap" />
-                    </Button>
+                        <!--  Rangée 1  -->
+                        <Button Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                Command="{Binding OpenAddDialogCommand}"
+                                Foreground="Black"
+                                Style="{StaticResource MaterialDesignRaisedButton}">
+                            <TextBlock FontSize="12"
+                                       Text="Ajouter un produit"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                        </Button>
 
-                    <!--  Rangée 2  -->
-                    <Button Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource PrimaryHueMidBrush}"
-                            Foreground="Black"
-                            Style="{StaticResource MaterialDesignRaisedButton}">
-                        <TextBlock FontSize="12"
-                                   Text="Modifier un produit"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap" />
-                    </Button>
+                        <!--  Rangée 2  -->
+                        <Button Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                Command="{Binding OpenEditDialogCommand}"
+                                Foreground="Black"
+                                Style="{StaticResource MaterialDesignRaisedButton}">
+                            <TextBlock FontSize="12"
+                                       Text="Modifier un produit"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                        </Button>
 
-                    <!--  Rangée 3  -->
-                    <Button Grid.Row="2"
-                            Grid.Column="0"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource PrimaryHueMidBrush}"
-                            Foreground="Black"
-                            Style="{StaticResource MaterialDesignRaisedButton}">
-                        <TextBlock FontSize="12"
-                                   Text="Supprimer un produit"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap" />
-                    </Button>
+                        <!--  Rangée 3  -->
+                        <Button Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                Command="{Binding OpenDeleteDialogCommand}"
+                                Foreground="Black"
+                                Style="{StaticResource MaterialDesignRaisedButton}">
+                            <TextBlock FontSize="12"
+                                       Text="Supprimer un produit"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                        </Button>
 
-                    <!--  Rangée 4  -->
-                    <Button Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource PrimaryHueMidBrush}"
-                            Foreground="Black"
-                            Style="{StaticResource MaterialDesignRaisedButton}">
-                        <TextBlock FontSize="12"
-                                   Text="Générer un rapport"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap" />
-                    </Button>
-                </Grid>
-            </GroupBox>
+                        <!--  Rangée 4  -->
+                        <Button Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="5"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                Command="{Binding GenerateReportCommand}"
+                                Foreground="Black"
+                                Style="{StaticResource MaterialDesignRaisedButton}">
+                            <TextBlock FontSize="12"
+                                       Text="Générer un rapport"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                        </Button>
+                    </Grid>
+                </GroupBox>
 
-            <!--  Liste des produits  -->
-            <DataGrid Grid.Row="2"
-                      Grid.Column="1"
-                      Margin="5"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      GridLinesVisibility="Horizontal"
-                      HeadersVisibility="Column"
-                      IsReadOnly="True"
-                      ItemsSource="{Binding ProductSearchResults}"
-                      SelectedItem="{Binding SelectedProduct}"
-                      SelectionMode="Single">
+                <!--  Liste des produits  -->
+                <DataGrid Grid.Row="2"
+                          Grid.Column="1"
+                          Margin="5"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          GridLinesVisibility="Horizontal"
+                          HeadersVisibility="Column"
+                          IsReadOnly="True"
+                          ItemsSource="{Binding SearchResults}"
+                          SelectedItem="{Binding SelectedProduct}"
+                          SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding Code}"
+                                            Header="Code" />
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding Name}"
+                                            Header="Nom" />
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding Price, StringFormat=C}"
+                                            Header="Prix" />
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding QuantityInStock}"
+                                            Header="Stock" />
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding Taxable}"
+                                            Header="Stock" />
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding Subcategory.Name}"
+                                            Header="Catégorie" />
+                        <DataGridTextColumn Width="auto"
+                                            Binding="{Binding Subcategory.Category.Name}"
+                                            Header="Catégorie" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </materialDesign:Card>
+    </materialDesign:DialogHost>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Code}"
-                                        Header="Code" />
-                    <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Name}"
-                                        Header="Nom" />
-                    <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Price, StringFormat=C}"
-                                        Header="Prix" />
-                    <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Stock}"
-                                        Header="Stock" />
-                    <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Category}"
-                                        Header="Catégorie" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-    </materialDesign:Card>
 </UserControl>

@@ -1,4 +1,4 @@
-﻿using CheckoutApp.Service;
+﻿using SuperCchicLibrary.Service;
 using CheckoutApp.View;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

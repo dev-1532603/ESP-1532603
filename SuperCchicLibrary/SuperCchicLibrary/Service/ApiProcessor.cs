@@ -1,4 +1,4 @@
-﻿using CheckoutApp.Service;
+﻿using SuperCchicLibrary.Service;
 using Newtonsoft.Json;
 using SuperCchicAPI.Models;
 using System;
@@ -46,6 +46,75 @@ namespace SuperCchicLibrary.Service
                 }
             }
         }
+        public static Task<List<Product>> GetProducts()
+        {
+            string url = "Products";
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return task.Result.Content.ReadAsAsync<List<Product>>();
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+        public static Task<Product> PostProduct(Product product)
+        {
+            string url = $"Products";
+            string json = JsonConvert.SerializeObject(product);
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return task.Result.Content.ReadAsAsync<Product>();
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+        public static Task<Product> PutProduct(Product product)
+        {
+            string url = $"Products/{product.Id}";
+            string json = JsonConvert.SerializeObject(product);
+            var request = new HttpRequestMessage(HttpMethod.Put, url);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return task.Result.Content.ReadAsAsync<Product>();
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+        public static Task DeleteProduct(int id)
+        {
+            string url = $"Products/{id}";
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    return Task.CompletedTask;
+                }
+                else
+                {
+                    throw new Exception(task.Result.ReasonPhrase);
+                }
+            }
+        }
+
         public static Task<List<ProductDTO>> SearchProducts(string searchText)
         {
             string url = $"Products/Search/{searchText}";
