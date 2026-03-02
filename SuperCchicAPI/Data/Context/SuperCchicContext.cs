@@ -9,7 +9,7 @@ namespace SuperCchicAPI.Data.Context
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Order_Details> Order_Details { get; set; }
+        public DbSet<OrderDetails> Order_Details { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
         public SuperCchicContext(DbContextOptions<SuperCchicContext> options): base(options)

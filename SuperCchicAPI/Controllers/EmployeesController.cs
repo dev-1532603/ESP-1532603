@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperCchicAPI.Data.Context;
 using SuperCchicLibrary;
-using SuperCchicAPI.Models;
 
 namespace SuperCchicAPI.Controllers
 {

@@ -2,14 +2,8 @@
 using CheckoutApp.View;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using SuperCchicAPI.Models;
-using SuperCchicLibrary.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using SuperCchicLibrary;
 
 namespace CheckoutApp.ViewModel
 {

@@ -34,7 +34,7 @@ namespace CheckoutApp.View
             ApiHelper.InitializeClient();
 
             _transactionVM = new TransactionVM();
-            _productSearchVM = new ProductSearchVM();
+            _productSearchVM = new ProductSearchVM(_transactionVM._products);
             _discountVM = new DiscountVM();
 
             transactionV.DataContext = _transactionVM;

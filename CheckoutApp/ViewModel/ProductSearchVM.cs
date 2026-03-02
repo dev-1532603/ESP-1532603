@@ -1,39 +1,31 @@
 ﻿using CheckoutApp.View;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MaterialDesignThemes.Wpf;
-using SuperCchicAPI.Models;
 using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace CheckoutApp.ViewModel
 {
     public partial class ProductSearchVM : ObservableObject
     {
-        private Action<ProductDTO> _addToCart;
-        private List<ProductDTO> _products = new();
-
+        private List<Product> _products = new List<Product>(); 
+        private Action<Product> _addToCart;
         [ObservableProperty]
         private string? _searchText;
         [ObservableProperty]
-        private ObservableCollection<ProductDTO> _searchResults = new ObservableCollection<ProductDTO>();
+        private ObservableCollection<Product> _searchResults = new ObservableCollection<Product>();
         [ObservableProperty]
-        private ProductDTO? _selectedProduct;
+        private Product? _selectedProduct;
 
-        public ProductSearchVM()
+        public ProductSearchVM(List<Product> products)
         {
             SearchText = string.Empty;
-
-            InitializeProductsAsync();
+            _products = products;
+            SearchResults = new ObservableCollection<Product>(products);
         }
-        public void SetAddToCartAction(Action<ProductDTO> callback)
+        public void SetAddToCartAction(Action<Product> callback)
         {
             _addToCart = callback;
         }
@@ -51,25 +43,13 @@ namespace CheckoutApp.ViewModel
         {
             if (string.IsNullOrEmpty(newValue?.Trim()))
             {
-                SearchResults = new ObservableCollection<ProductDTO>(_products);
+                SearchResults = new ObservableCollection<Product>(_products);
                 return;
             }
 
             SearchProducts(SearchText);            
         }
-        private async Task InitializeProductsAsync()
-        {
-            try
-            {
-                _products = await ApiProcessor.GetAllProductsInfos() ?? new List<ProductDTO>();
-                SearchResults = new ObservableCollection<ProductDTO>(_products);
-            }
-            catch (Exception ex)
-            {
-                // Gérer l'erreur (log, message utilisateur, etc.)
-                Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
-            }
-        }
+        
         private void SearchProducts(string searchText)
         {
             var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower())).ToList();

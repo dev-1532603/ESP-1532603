@@ -76,9 +76,21 @@ namespace SuperCchicAPI.Controllers
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Order>> PostOrder(OrderDTO dto)
         {
+            var order = new Order(dto.TotalPrice, dto.EmployeeId);
             _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            var orderDetails = new List<OrderDetails>();
+            foreach (var od in dto.OrderDetails)
+            {
+                var detail = new OrderDetails(od.UnitPrice, od.Quantity, od.ProductId, order.Id);
+
+                orderDetails.Add(detail);
+            }
+
+            _context.Order_Details.AddRange(orderDetails);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);

@@ -384,6 +384,7 @@
                             HorizontalAlignment="Stretch"
                             Background="Green"
                             Foreground="White"
+                            Command="{Binding CompleteTransactionCommand}"
                             Style="{StaticResource MaterialDesignRaisedButton}">
                         <TextBlock Text="Passer au paiement"
                                    TextAlignment="Center"

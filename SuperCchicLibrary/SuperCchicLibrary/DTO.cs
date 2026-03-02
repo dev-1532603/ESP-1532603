@@ -1,6 +1,7 @@
-﻿using SuperCchicLibrary;
+﻿
+using System.Transactions;
 
-namespace SuperCchicAPI.Models
+namespace SuperCchicLibrary
 {
     public class LoginRequestDTO
     {
@@ -13,14 +14,17 @@ namespace SuperCchicAPI.Models
         public string? Username { get; set; }
         public string? Name { get; set; }
     }
-
-    public class ProductDTO
+    public class OrderDTO
     {
-        public string Code { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public int QuantityInStock { get; set; }
-        public Subcategory? Subcategory { get; set; }
+        public decimal TotalPrice { get; set; }
+        public int EmployeeId { get; set; }
+        public List<OrderDetailDTO> OrderDetails { get; set; } = new();
+    }
+    public class OrderDetailDTO
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
     }
     public class EmployeeDTO
     {

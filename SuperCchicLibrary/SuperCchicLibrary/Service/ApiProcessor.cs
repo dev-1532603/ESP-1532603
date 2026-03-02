@@ -1,6 +1,6 @@
 ﻿using SuperCchicLibrary.Service;
 using Newtonsoft.Json;
-using SuperCchicAPI.Models;
+using SuperCchicLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,22 +23,6 @@ namespace SuperCchicLibrary.Service
                 if (task.Result.IsSuccessStatusCode)
                 {
                     return task.Result.Content.ReadAsAsync<LoginResponseDTO>();
-                }
-                else
-                {
-                    throw new Exception(task.Result.ReasonPhrase);
-                }
-            }
-        }
-        public static Task<List<ProductDTO>> GetAllProductsInfos()
-        {
-            string url = "Products";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            using (Task<HttpResponseMessage> task = ApiHelper.ApiClient.SendAsync(request))
-            {
-                if (task.Result.IsSuccessStatusCode)
-                {
-                    return task.Result.Content.ReadAsAsync<List<ProductDTO>>();
                 }
                 else
                 {
@@ -115,7 +99,7 @@ namespace SuperCchicLibrary.Service
             }
         }
 
-        public static Task<List<ProductDTO>> SearchProducts(string searchText)
+        public static Task<List<Product>> SearchProducts(string searchText)
         {
             string url = $"Products/Search/{searchText}";
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -123,7 +107,7 @@ namespace SuperCchicLibrary.Service
             {
                 if (task.Result.IsSuccessStatusCode)
                 {
-                    return task.Result.Content.ReadAsAsync<List<ProductDTO>>();
+                    return task.Result.Content.ReadAsAsync<List<Product>>();
                 }
                 else
                 {
@@ -178,6 +162,26 @@ namespace SuperCchicLibrary.Service
                     throw new Exception(task.Result.ReasonPhrase);
                 }
             }
+        }
+        public static async Task<Order> PostOrder(OrderDTO dto)
+        {
+            string url = "Orders";
+            string json = JsonConvert.SerializeObject(dto);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            HttpResponseMessage response = await ApiHelper.ApiClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsAsync<Order>();
+            }
+
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"{response.ReasonPhrase}: {error}");
         }
     }
 }
