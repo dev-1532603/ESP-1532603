@@ -24,6 +24,8 @@ namespace CheckoutApp.View
         public TransactionV()
         {
             InitializeComponent();
+
+            Loaded += (s, e) => ScanBox.Focus();
         }
 
         private void DiscountButton_Click(object sender, RoutedEventArgs e)

@@ -14,6 +14,14 @@ namespace SuperCchicLibrary
         public string? Username { get; set; }
         public string? Name { get; set; }
     }
+    public class ProductDTO
+    {
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public int QuantityInStock { get; set; }
+        public bool Taxable { get; set; }
+        public int IdSubcategory { get; set; }
+    }
     public class OrderDTO
     {
         public decimal TotalPrice { get; set; }

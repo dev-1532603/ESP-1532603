@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperCchicAPI.Data.Context;
 using SuperCchicLibrary;
+using SuperCchicLibrary.Service;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SuperCchicAPI.Controllers
 {
@@ -85,12 +86,26 @@ namespace SuperCchicAPI.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDTO dto)
         {
+            var product = new Product
+            {
+                Name = dto.Name,
+                Price = dto.Price,
+                QuantityInStock = dto.QuantityInStock,
+                Taxable = dto.Taxable,
+                IdSubcategory = dto.IdSubcategory
+            };
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            product.Code = BarcodeService.GenerateBarcodeDigits(product);
+
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+
+            return product;
         }
 
         // DELETE: api/Products/5

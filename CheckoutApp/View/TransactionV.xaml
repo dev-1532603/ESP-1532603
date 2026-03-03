@@ -391,8 +391,14 @@
                                    TextWrapping="Wrap" />
                     </Button>
                 </Grid>
+                <StackPanel Grid.Row="3" Width="0" Height="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <TextBox Background="Transparent" Opacity="0" x:Name="ScanBox" Text="{Binding ScannedBarcode, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding ScanItemCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
             </Grid>
         </materialDesign:Card>
     </materialDesign:DialogHost>
-
 </UserControl>

@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IronBarCode;
+using IronSoftware.Drawing;
 using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
 using System.Collections.ObjectModel;
@@ -30,6 +32,8 @@ namespace CheckoutApp.ViewModel
         private string _dialogHint = string.Empty;
         [ObservableProperty]
         private string _transactionComment = string.Empty;
+        [ObservableProperty]
+        private string _scannedBarcode = string.Empty;
 
         public TransactionVM()
         {
@@ -162,5 +166,22 @@ namespace CheckoutApp.ViewModel
                 UpdateTransaction();
             }
         }
+        [RelayCommand]
+        public void ScanItem()
+        {
+            if (!string.IsNullOrEmpty(ScannedBarcode))
+            {
+
+                //BarcodeResults results = BarcodeReader.Read(ScannedBarcode);
+
+                //foreach( BarcodeResult result in results)
+                //{
+                //    Console.WriteLine(result);
+                //}
+                ScannedBarcode = "";
+            }
+
+        }
+        
     }
 }
