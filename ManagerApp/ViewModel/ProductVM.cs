@@ -94,7 +94,7 @@ namespace ManagerApp.ViewModel
             DialogQuantityInStock = 0;
             DialogTaxable = false;
             DialogSubcategory = null;
-            //DialogSubcategoryId = Subcategories?.FirstOrDefault()?.Id ?? 0; 
+            DialogSubcategoryId = Subcategories?.FirstOrDefault()?.Id ?? 0; 
             IsDialogReadOnly = false;
             IsDialogToggleable = true;
             _onDialogConfirm = () => AddProduct();
@@ -116,7 +116,7 @@ namespace ManagerApp.ViewModel
             DialogQuantityInStock = SelectedProduct.QuantityInStock;
             DialogTaxable = SelectedProduct.Taxable;
             DialogSubcategory = SelectedProduct.Subcategory;
-            //DialogSubcategoryId = SelectedProduct.IdSubcategory;
+            DialogSubcategoryId = SelectedProduct.Subcategory.Id;
             IsDialogReadOnly = false;
             IsDialogToggleable = true;
             _onDialogConfirm = () => EditProduct();
@@ -184,14 +184,15 @@ namespace ManagerApp.ViewModel
                 IdSubcategory = DialogSubcategoryId,
                 Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId),
             };
-            newProduct.Code = BarcodeService.GenerateBarcode(newProduct);
 
             try
             {
-                await ApiProcessor.PostProduct(newProduct);
+                newProduct = await ApiProcessor.PostProduct(newProduct);
 
                 _products.Add(newProduct);
                 SearchResults = new ObservableCollection<Product>(_products);
+
+                BarcodeService.GenerateBarcodeLabel(newProduct);
             }
             catch (Exception ex)
             {

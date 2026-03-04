@@ -101,8 +101,9 @@ namespace SuperCchicAPI.Controllers
             await _context.SaveChangesAsync();
 
             product.Code = BarcodeService.GenerateBarcode(product);
-
             _context.Products.Update(product);
+
+
             await _context.SaveChangesAsync();
 
             return product;

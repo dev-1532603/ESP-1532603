@@ -13,9 +13,11 @@ namespace CheckoutApp.ViewModel
 {
     public partial class TransactionVM : ObservableObject
     {
+        const decimal TPSAMOUNT = 0.05m, TVQAMOUNT = 0.09975m, DISCOUNT = 0.9m;
         public List<Product> _products = new();
         private bool _isDiscountApplied;
         private Action<string>? _onDialogConfirm;
+        private List<OrderReceipt> _transactionHistory = new();
         [ObservableProperty]
         private ObservableCollection<TransactionItem> _transactionItems = new ObservableCollection<TransactionItem>();
         [ObservableProperty]
@@ -48,13 +50,53 @@ namespace CheckoutApp.ViewModel
             try
             {
                 _products = await ApiProcessor.GetProducts() ?? new List<Product>();
-                //SearchResults = new ObservableCollection<Product>(_products);
             }
             catch (Exception ex)
             {
-                // Gérer l'erreur (log, message utilisateur, etc.)
                 Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
             }
+        }
+        private void UpdateTransaction()
+        {
+            decimal taxableSubtotal = TransactionItems.Where(i => i.Taxable).Sum(i => i.TotalPrice);
+            Subtotal = TransactionItems.Sum(i => i.TotalPrice);
+            if (_isDiscountApplied)
+            {
+                Subtotal *= DISCOUNT;
+            }
+            Tps = taxableSubtotal * TPSAMOUNT;
+            Tvq = taxableSubtotal * TVQAMOUNT;
+            TransactionTotal = Subtotal + Tps + Tvq;
+        }
+        private void ClearTransaction()
+        {
+            TransactionItems.Clear();
+            Subtotal = 0;
+            Tps = 0;
+            Tvq = 0;
+            TransactionTotal = 0;
+            TransactionComment = string.Empty;
+            _isDiscountApplied = false;
+        }
+        //Callback method
+        public void AddToTransaction(Product product)
+        {
+            TransactionItem item = new TransactionItem(product.Id, product.Code, product.Name, 1, product.Price, product.Taxable);
+
+            TransactionItem? existingItem = TransactionItems.FirstOrDefault(i => i.ProductName == item.ProductName);
+            if (existingItem != null)
+            {
+                existingItem.Quantity++;
+            }
+            else
+            {
+                TransactionItems.Add(item);
+            }
+        }
+        //Callback method
+        public void ApplyTransactionDiscount(EmployeeDTO employee)
+        {
+            _isDiscountApplied = true;
         }
         [RelayCommand]
         public void OpenQuantityDialog()
@@ -96,36 +138,7 @@ namespace CheckoutApp.ViewModel
         {
             IsDialogOpen = false;
         }
-        private void UpdateTransaction()
-        {
-            decimal taxableSubtotal = TransactionItems.Where(i => i.Taxable).Sum(i => i.TotalPrice);
-            Subtotal = TransactionItems.Sum(i => i.TotalPrice);
-            if (_isDiscountApplied)
-            {
-                Subtotal *= 0.9m;
-            }
-            Tps = taxableSubtotal * 0.05m;
-            Tvq = taxableSubtotal * 0.09975m;
-            TransactionTotal = Subtotal + Tps + Tvq;
-        }
-        public void AddToTransaction(Product product)
-        {
-            TransactionItem item = new TransactionItem(product.Id, product.Code, product.Name, 1, product.Price, product.Taxable);
-
-            TransactionItem? existingItem = TransactionItems.FirstOrDefault(i => i.ProductName == item.ProductName);
-            if (existingItem != null)
-            {
-                existingItem.Quantity++;
-            }
-            else
-            {
-                TransactionItems.Add(item);
-            }
-        }
-        public void ApplyTransactionDiscount(EmployeeDTO employee)
-        {
-            _isDiscountApplied = true;
-        }
+        
         [RelayCommand]
         public async Task CompleteTransaction()
         {
@@ -139,16 +152,15 @@ namespace CheckoutApp.ViewModel
             };
 
             var order = await ApiProcessor.PostOrder(orderDTO);
+            
+            _transactionHistory.Add(OrderReceipt.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
 
-            // reset si ca marche
-            TransactionItems.Clear();
-            Subtotal = 0;
-            Tps = 0;
-            Tvq = 0;
-            TransactionTotal = 0;
-            _isDiscountApplied = false;
-
-            OrderReceipt.GenerateReceipt(orderdetails, TransactionComment);
+            ClearTransaction();
+        }
+        [RelayCommand]
+        public void PrintLastReceipt()
+        {
+            OrderReceipt.PrintReceipt(_transactionHistory.Last());
         }
         [RelayCommand]
         public void RemoveFromTransaction()

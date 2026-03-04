@@ -9,8 +9,8 @@ namespace SuperCchicLibrary.Service
         public static void GenerateBarcodeLabel(Product product)
         {
             var font = new Font("Arial", FontStyle.Regular, 24f);
-
-            GeneratedBarcode barcode = BarcodeWriter.CreateBarcode(product.Code, BarcodeWriterEncoding.UPCA);
+            string formattedCode = product.Code.Substring(0, 11);
+            GeneratedBarcode barcode = BarcodeWriter.CreateBarcode(formattedCode, BarcodeWriterEncoding.UPCA);
             barcode.AddAnnotationTextAboveBarcode(product.Name, font, Color.Black, 10);
             barcode.AddBarcodeValueTextBelowBarcode(10);
             barcode.ResizeTo(400, 120);

@@ -30,7 +30,7 @@
                             Command="{Binding CancelDialogCommand}"
                             Content="Annuler"
                             Foreground="White"
-                            Style="{StaticResource MaterialDesignOutlinedButton}" />
+                            Style="{StaticResource MaterialDesignRaisedButton}" />
                     <Button Margin="5"
                             Background="Green"
                             Command="{Binding ConfirmDialogCommand}"

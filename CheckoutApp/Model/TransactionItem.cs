@@ -47,8 +47,10 @@ namespace CheckoutApp
                 OrderDetailDTO orderdetail = new OrderDetailDTO
                 {
                     ProductId = item.ProductId,
+                    ProductName = item.ProductName,
                     Quantity = item.Quantity,
                     UnitPrice = item.UnitPrice,
+                    TotalPrice = item.TotalPrice,
                 };
 
                 list.Add(orderdetail);

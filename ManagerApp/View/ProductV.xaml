@@ -57,7 +57,8 @@
                           IsEnabled="{Binding IsDialogToggleable}"
                           IsReadOnly="{Binding IsDialogReadOnly}"
                           ItemsSource="{Binding Subcategories}"
-                          SelectedValue="{Binding SelectedProduct.Subcategory, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding DialogSubcategory}"
+                          SelectedValue="{Binding DialogSubcategoryId, UpdateSourceTrigger=PropertyChanged}"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -219,7 +220,10 @@
                           IsReadOnly="True"
                           ItemsSource="{Binding SearchResults}"
                           SelectedItem="{Binding SelectedProduct}"
-                          SelectionMode="Single">
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          RowBackground="Transparent"
+                          AlternatingRowBackground="{DynamicResource MaterialDesignDivider}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="auto"
                                             Binding="{Binding Code}"
