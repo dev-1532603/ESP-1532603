@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using SuperCchicAPI.Models;
 using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
 using System;
@@ -18,8 +17,7 @@ namespace ManagerApp.ViewModel
     public partial class ProductVM : ObservableObject
     {
         private Func<Task>? _onDialogConfirm;
-        [ObservableProperty]
-        private ObservableCollection<Product> _products = new ObservableCollection<Product>();
+        private List<Product> _products = new List<Product>();
         [ObservableProperty]
         private ObservableCollection<Product> _searchResults = new ObservableCollection<Product>();
         [ObservableProperty]
@@ -35,56 +33,33 @@ namespace ManagerApp.ViewModel
         [ObservableProperty]
         private string _dialogMessage = string.Empty;
         [ObservableProperty]
-        private string _dialogCode = string.Empty;
-        [ObservableProperty]
         private string _dialogName = string.Empty;
-
         [ObservableProperty]
         private decimal _dialogPrice;
-
         [ObservableProperty]
         private int _dialogQuantityInStock;
-
         [ObservableProperty]
         private bool _dialogTaxable;
-
         [ObservableProperty]
         private Subcategory? _dialogSubcategory;
+        [ObservableProperty]
+        private int _dialogSubcategoryId;
 
         public ProductVM()
         {
             InitializeProductsAsync();
 
-            // MOCK UPS
-            Subcategories = new ObservableCollection<Subcategory>
-            {
-                new Subcategory { Name = "Fruits", Category = new Category { Name = "Alimentation" } },
-                new Subcategory { Name = "Légumes", Category = new Category { Name = "Alimentation" } },
-                new Subcategory { Name = "Boissons", Category = new Category { Name = "Alimentation" } },
-            };
-
-            Products = new ObservableCollection<Product>
-            {
-                new Product { Code = "P001", Name = "Pomme", Price = 1.99m, QuantityInStock = 50, Taxable = false, Subcategory = Subcategories[0] },
-                new Product { Code = "P002", Name = "Banane", Price = 0.99m, QuantityInStock = 80, Taxable = false, Subcategory = Subcategories[0] },
-                new Product { Code = "P003", Name = "Carotte", Price = 2.49m, QuantityInStock = 30, Taxable = false, Subcategory = Subcategories[1] },
-                new Product { Code = "P004", Name = "Jus d'orange", Price = 3.99m, QuantityInStock = 25, Taxable = true, Subcategory = Subcategories[2] },
-            };
-
-            SearchResults = new ObservableCollection<Product>(Products);
+            SearchResults = new ObservableCollection<Product>(_products);
         }
         private async Task InitializeProductsAsync()
         {
             try
             {
-                //A TESTER
-                _products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
-                //Products = new ObservableCollection<Product>(_products);
                 _subcategories = new ObservableCollection<Subcategory>(await ApiProcessor.GetSubcategories() ?? new List<Subcategory>());
+                _products = await ApiProcessor.GetProducts() ?? new List<Product>();
             }
             catch (Exception ex)
             {
-                // Gérer l'erreur (log, message utilisateur, etc.)
                 Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
             }
         }
@@ -114,12 +89,12 @@ namespace ManagerApp.ViewModel
         {
             DialogTitle = "Ajouter un produit";
             DialogMessage = "Veuillez remplir les informations du produit.";
-            DialogCode = string.Empty;
             DialogName = string.Empty;
             DialogPrice = 0;
             DialogQuantityInStock = 0;
             DialogTaxable = false;
             DialogSubcategory = null;
+            //DialogSubcategoryId = Subcategories?.FirstOrDefault()?.Id ?? 0; 
             IsDialogReadOnly = false;
             IsDialogToggleable = true;
             _onDialogConfirm = () => AddProduct();
@@ -136,12 +111,12 @@ namespace ManagerApp.ViewModel
             }
             DialogTitle = "Modifier un produit";
             DialogMessage = "Modifiez les informations du produit.";
-            DialogCode = SelectedProduct.Code;
             DialogName = SelectedProduct.Name;
             DialogPrice = SelectedProduct.Price;
             DialogQuantityInStock = SelectedProduct.QuantityInStock;
             DialogTaxable = SelectedProduct.Taxable;
             DialogSubcategory = SelectedProduct.Subcategory;
+            //DialogSubcategoryId = SelectedProduct.IdSubcategory;
             IsDialogReadOnly = false;
             IsDialogToggleable = true;
             _onDialogConfirm = () => EditProduct();
@@ -158,7 +133,6 @@ namespace ManagerApp.ViewModel
             }
             DialogTitle = $"Supprimer — {SelectedProduct.Name}";
             DialogMessage = "Êtes-vous sûr de vouloir supprimer ce produit ?";
-            DialogCode = SelectedProduct.Code;
             DialogName = SelectedProduct.Name;
             DialogPrice = SelectedProduct.Price;
             DialogQuantityInStock = SelectedProduct.QuantityInStock;
@@ -203,18 +177,21 @@ namespace ManagerApp.ViewModel
         {
             var newProduct = new Product
             {
-                Code = DialogCode,
                 Name = DialogName,
                 Price = DialogPrice,
                 QuantityInStock = DialogQuantityInStock,
                 Taxable = DialogTaxable,
-                Subcategory = DialogSubcategory
+                IdSubcategory = DialogSubcategoryId,
+                Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId),
             };
+            newProduct.Code = BarcodeService.GenerateBarcode(newProduct);
 
             try
             {
                 await ApiProcessor.PostProduct(newProduct);
-                Products.Add(newProduct);
+
+                _products.Add(newProduct);
+                SearchResults = new ObservableCollection<Product>(_products);
             }
             catch (Exception ex)
             {
@@ -226,18 +203,23 @@ namespace ManagerApp.ViewModel
         {
             if (SelectedProduct == null) return;
 
-            SelectedProduct.Code = DialogCode;
-            SelectedProduct.Name = DialogName;
-            SelectedProduct.Price = DialogPrice;
-            SelectedProduct.QuantityInStock = DialogQuantityInStock;
-            SelectedProduct.Taxable = DialogTaxable;
-            SelectedProduct.Subcategory = DialogSubcategory;
+            Product? product = _products.FirstOrDefault(p => p.Id == SelectedProduct.Id);
+
+            if (product == null) return;
+
+            product.Name = DialogName;
+            product.Price = DialogPrice;
+            product.QuantityInStock = DialogQuantityInStock;
+            product.Taxable = DialogTaxable;
+            product.IdSubcategory = DialogSubcategoryId;
+            product.Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId);
 
             try
             {
-                await ApiProcessor.PutProduct(SelectedProduct);
+                await ApiProcessor.PutProduct(product);
 
-                SearchResults = new ObservableCollection<Product>(Products);
+                SelectedProduct = null;
+                SearchResults = new ObservableCollection<Product>(_products);
             }
             catch (Exception ex)
             {
@@ -252,9 +234,10 @@ namespace ManagerApp.ViewModel
             {
                 await ApiProcessor.DeleteProduct(SelectedProduct.Id);
 
-                Products.Remove(SelectedProduct);
-                SearchResults.Remove(SelectedProduct);
+                _products.Remove(SelectedProduct);
                 SelectedProduct = null;
+                SearchResults = new ObservableCollection<Product>(_products);
+
             }
             catch (Exception ex)
             {
@@ -266,11 +249,11 @@ namespace ManagerApp.ViewModel
             // si le dialog est en mode lecture, one ne valide pas les champs
             if (IsDialogReadOnly) return true; 
 
-            if (string.IsNullOrWhiteSpace(DialogCode))
-            {
-                MessageBox.Show("Le code est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
+            //if (string.IsNullOrWhiteSpace(DialogCode))
+            //{
+            //    MessageBox.Show("Le code est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //    return false;
+            //}
             if (string.IsNullOrWhiteSpace(DialogName))
             {
                 MessageBox.Show("Le nom est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -291,9 +274,9 @@ namespace ManagerApp.ViewModel
                 MessageBox.Show("Veuillez sélectionner une sous-catégorie.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            if (Products.Any(p => p.Code == DialogCode && p != SelectedProduct))
+            if (DialogSubcategoryId == 0)
             {
-                MessageBox.Show("Ce code est déjà utilisé par un autre produit.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Veuillez sélectionner une sous-catégorie.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 

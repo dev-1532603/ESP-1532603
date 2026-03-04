@@ -24,12 +24,6 @@
                            Foreground="Gray"
                            Text="{Binding DialogMessage}" />
                 <TextBox Margin="5"
-                         materialDesign:HintAssist.Hint="Code"
-                         IsReadOnly="{Binding IsDialogReadOnly}"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding DialogCode, UpdateSourceTrigger=PropertyChanged}" />
-
-                <TextBox Margin="5"
                          materialDesign:HintAssist.Hint="Nom"
                          IsReadOnly="{Binding IsDialogReadOnly}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
@@ -59,10 +53,11 @@
                 <ComboBox Margin="5"
                           materialDesign:HintAssist.Hint="Sous-catégorie"
                           DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
                           IsEnabled="{Binding IsDialogToggleable}"
                           IsReadOnly="{Binding IsDialogReadOnly}"
                           ItemsSource="{Binding Subcategories}"
-                          SelectedItem="{Binding DialogSubcategory}"
+                          SelectedValue="{Binding SelectedProduct.Subcategory, UpdateSourceTrigger=PropertyChanged}"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -240,10 +235,10 @@
                                             Header="Stock" />
                         <DataGridTextColumn Width="auto"
                                             Binding="{Binding Taxable}"
-                                            Header="Stock" />
+                                            Header="Taxable" />
                         <DataGridTextColumn Width="auto"
                                             Binding="{Binding Subcategory.Name}"
-                                            Header="Catégorie" />
+                                            Header="Sous-Catégorie" />
                         <DataGridTextColumn Width="auto"
                                             Binding="{Binding Subcategory.Category.Name}"
                                             Header="Catégorie" />

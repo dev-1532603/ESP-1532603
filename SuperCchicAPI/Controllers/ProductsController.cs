@@ -100,7 +100,7 @@ namespace SuperCchicAPI.Controllers
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            product.Code = BarcodeService.GenerateBarcodeDigits(product);
+            product.Code = BarcodeService.GenerateBarcode(product);
 
             _context.Products.Update(product);
             await _context.SaveChangesAsync();

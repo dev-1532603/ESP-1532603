@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ManagerApp.View;
-using SuperCchicAPI.Models;
+using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
 using System;
 using System.Collections.Generic;

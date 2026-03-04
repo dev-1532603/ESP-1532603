@@ -6,7 +6,7 @@ namespace SuperCchicLibrary.Service
     public class BarcodeService
     {
         const string COMPANYTPREFIX = "12345";
-        private void GenerateBarcodeLabel(Product product)
+        public static void GenerateBarcodeLabel(Product product)
         {
             var font = new Font("Arial", FontStyle.Regular, 24f);
 
@@ -17,45 +17,60 @@ namespace SuperCchicLibrary.Service
             barcode.SetMargins(10);
             barcode.SaveAsImage($"{product.Name}.png");
         }
-        public static string GenerateBarcodeDigits(Product product)
+        public static string GenerateBarcode(Product product)
         {
             string firstdigit = string.Empty;
 
-            // changer le switch pour la category id
-
-            switch (product.Subcategory.Category.Id)
+            switch (product.IdSubcategory)
             {
-                case 1:
-                    firstdigit = "0";
-                    break;
-                case 3 or 4:
-                    firstdigit = "1";
-                    break;
-                case 5 or 6:
-                    firstdigit = "2";
-                    break;
-                case 7 or 8:                  
-                    firstdigit = "4";
-                    break;
-                case 9 or 10 or 11:           
-                    firstdigit = "5";
-                    break;
-                case 12 or 13 or 14:           
-                    firstdigit = "6";
-                    break;
-                case 15 or 16:               
-                    firstdigit = "7";
-                    break;
                 default:
                     firstdigit = "0"; 
                     break;
             }
 
-            
             string sequencedigits = product.Id.ToString().PadLeft(5, '0');
 
-            // checksum pour le checkdigit + changer les codes dans la bd pour des 12 chiffres 
-            return firstdigit + COMPANYTPREFIX + sequencedigits;
+            string barcodeWithoutCheckDigit = firstdigit + COMPANYTPREFIX + sequencedigits;
+
+            string checkDigit = CalculateUPCACheckDigit(barcodeWithoutCheckDigit);
+
+            return barcodeWithoutCheckDigit + checkDigit;
+        }
+        // ai generated because it is a standard calculation
+        private static string CalculateUPCACheckDigit(string code)
+        {
+            if (code.Length != 11)
+            {
+                throw new ArgumentException("Code must be exactly 11 digits for UPC-A checksum calculation");
+            }
+
+            int sumOdd = 0;
+            int sumEven = 0;
+
+            // Add digits at odd positions (1st, 3rd, 5th, 7th, 9th, 11th)
+            // Note: positions are 1-based, but array is 0-based
+            for (int i = 0; i < code.Length; i++)
+            {
+                int digit = int.Parse(code[i].ToString());
+
+                if (i % 2 == 0)  // 0-based index: 0, 2, 4, 6, 8, 10 = odd positions (1, 3, 5, 7, 9, 11)
+                {
+                    sumOdd += digit;
+                }
+                else  // 0-based index: 1, 3, 5, 7, 9 = even positions (2, 4, 6, 8, 10)
+                {
+                    sumEven += digit;
+                }
+            }
+
+            // Multiply odd sum by 3 and add even sum
+            int total = (sumOdd * 3) + sumEven;
+
+            // Calculate check digit
+            int remainder = total % 10;
+            int checkDigit = (remainder == 0) ? 0 : (10 - remainder);
+
+            return checkDigit.ToString();
         }
     }
 }

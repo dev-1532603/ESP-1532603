@@ -25,7 +25,7 @@ namespace SuperCchicAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Subcategory>>> GetSubcategories()
         {
-            return await _context.Subcategories.ToListAsync();
+            return await _context.Subcategories.Include(sc => sc.Category).ToListAsync();
         }
 
         // GET: api/Subcategories/5
