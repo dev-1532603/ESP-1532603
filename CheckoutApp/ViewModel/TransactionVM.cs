@@ -50,6 +50,12 @@ namespace CheckoutApp.ViewModel
             try
             {
                 _products = await ApiProcessor.GetProducts() ?? new List<Product>();
+
+                //C'est pour avoir accès aux barcodes dans le bin debug
+                foreach (var item in _products)
+                {
+                    BarcodeService.GenerateBarcodeLabel(item);
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +74,8 @@ namespace CheckoutApp.ViewModel
             Tvq = taxableSubtotal * TVQAMOUNT;
             TransactionTotal = Subtotal + Tps + Tvq;
         }
-        private void ClearTransaction()
+        [RelayCommand]
+        public void ClearTransaction()
         {
             TransactionItems.Clear();
             Subtotal = 0;
@@ -97,6 +104,7 @@ namespace CheckoutApp.ViewModel
         public void ApplyTransactionDiscount(EmployeeDTO employee)
         {
             _isDiscountApplied = true;
+            UpdateTransaction();
         }
         [RelayCommand]
         public void OpenQuantityDialog()
@@ -183,17 +191,13 @@ namespace CheckoutApp.ViewModel
         {
             if (!string.IsNullOrEmpty(ScannedBarcode))
             {
-
-                //BarcodeResults results = BarcodeReader.Read(ScannedBarcode);
-
-                //foreach( BarcodeResult result in results)
-                //{
-                //    Console.WriteLine(result);
-                //}
-                ScannedBarcode = "";
+                Product scannedProduct = _products.FirstOrDefault(p => p.Code == ScannedBarcode);
+                if(scannedProduct != null)
+                {
+                    AddToTransaction(scannedProduct);
+                }
             }
-
+            ScannedBarcode = "";
         }
-        
     }
 }

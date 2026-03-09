@@ -24,7 +24,6 @@ namespace CheckoutApp.View
         public LoginV()
         {
             InitializeComponent();
-            this.DataContext = new LoginVM();
         }
     }
 }

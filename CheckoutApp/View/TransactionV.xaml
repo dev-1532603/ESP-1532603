@@ -325,7 +325,6 @@
                                    HorizontalAlignment="Right"
                                    Foreground="#555555"
                                    Text="{Binding Tps, StringFormat={}{0:C2}}" />
-
                         <TextBlock Grid.Row="2"
                                    Grid.Column="0"
                                    Margin="0,2"
@@ -372,6 +371,7 @@
                             HorizontalAlignment="Left"
                             Background="Red"
                             Foreground="White"
+                            Command="{Binding ClearTransactionCommand}"
                             Style="{StaticResource MaterialDesignRaisedButton}">
                         <TextBlock Text="Annuler"
                                    TextAlignment="Center"

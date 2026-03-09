@@ -24,19 +24,22 @@ namespace CheckoutApp.View
         public TransactionVM _transactionVM;
         public ProductSearchVM _productSearchVM;
         public DiscountVM _discountVM;
+        public LoginVM _loginVM;
         public MainWindow()
         {
+            ApiHelper.InitializeClient();
+
             InitializeComponent();    
             Initialize();
         }
         private void Initialize()
         {
-            ApiHelper.InitializeClient();
-
+            _loginVM = new LoginVM();
             _transactionVM = new TransactionVM();
             _productSearchVM = new ProductSearchVM(_transactionVM._products);
             _discountVM = new DiscountVM();
 
+            loginV.DataContext = _loginVM;
             transactionV.DataContext = _transactionVM;
             productSearchV.DataContext = _productSearchVM;
             discountV.DataContext = _discountVM;

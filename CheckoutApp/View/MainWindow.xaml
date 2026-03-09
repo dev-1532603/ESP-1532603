@@ -15,8 +15,8 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d">
     <Grid>
-        <local:LoginV x:Name="loginV" Visibility="Collapsed" />
-        <local:TransactionV x:Name="transactionV" Visibility="Visible" />
+        <local:LoginV x:Name="loginV" Visibility="Visible" />
+        <local:TransactionV x:Name="transactionV" Visibility="Collapsed" />
         <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed" />
         <local:DiscountV x:Name="discountV" Visibility="Collapsed" />
     </Grid>
