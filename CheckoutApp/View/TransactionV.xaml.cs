@@ -37,5 +37,14 @@ namespace CheckoutApp.View
         {
             ((MainWindow)Window.GetWindow(this)).ShowProductSearchView();
         }
+        private void ScanBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var vm = DataContext as TransactionVM;
+                vm.ScanItemCommand.Execute(null);
+                ScanBox.Clear();
+            }
+        }
     }
 }

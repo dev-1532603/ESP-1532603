@@ -5,6 +5,7 @@
              xmlns:local="clr-namespace:CheckoutApp.View"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:services="clr-namespace:SuperCchicLibrary.Service;assembly=SuperCchicLibrary"
              xmlns:viewmodel="clr-namespace:CheckoutApp.ViewModel"
              d:DataContext="{d:DesignInstance Type=viewmodel:TransactionVM}"
              d:DesignHeight="450"
@@ -63,9 +64,10 @@
                             Content="Déconnexion"
                             Foreground="Black"
                             Style="{StaticResource MaterialDesignRaisedButton}" />
+
                     <Label HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Content="Utilisateur"
+                           Content="{Binding Source={x:Static services:AuthenticationService.Instance}, Path=CurrentEmployee.Username}"
                            FontSize="16"
                            FontWeight="Bold" />
                 </StackPanel>
@@ -137,6 +139,7 @@
                                 Margin="5"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
+                                Command="{Binding PrintLastReceiptCommand}"
                                 Foreground="Black"
                                 Style="{StaticResource MaterialDesignRaisedButton}">
                             <TextBlock FontSize="12"
@@ -191,6 +194,23 @@
                     </Grid>
                 </GroupBox>
 
+                <StackPanel Grid.Row="2"
+                            HorizontalAlignment="Stretch"
+                            Orientation="Vertical">
+                    <Label HorizontalAlignment="Center"
+                           Content="Entrer un code de produit"
+                           FontSize="14"
+                           FontWeight="Bold" />
+                    <TextBox x:Name="ScanBox"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding ScannedBarcode, UpdateSourceTrigger=PropertyChanged}"
+                             Visibility="Visible">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding ScanItemCommand}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+
                 <!--  Panneau de produits de la transaction  -->
                 <!--  Liste des produits  -->
                 <Border Grid.Row="1"
@@ -201,7 +221,7 @@
                         CornerRadius="5">
                     <DockPanel>
                         <!--  En-tête de la liste  -->
-                        <Border Padding="8,6"
+                        <Border Padding="5"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 CornerRadius="4,4,0,0"
                                 DockPanel.Dock="Top">
@@ -217,12 +237,10 @@
                                            FontWeight="Bold"
                                            Text="Produit" />
                                 <TextBlock Grid.Column="1"
-                                           HorizontalAlignment="Center"
                                            FontSize="12"
                                            FontWeight="Bold"
-                                           Text="Qté" />
+                                           Text="Quantité" />
                                 <TextBlock Grid.Column="2"
-                                           HorizontalAlignment="Center"
                                            FontSize="12"
                                            FontWeight="Bold"
                                            Text="Prix unit." />
@@ -370,8 +388,8 @@
                             Margin="5"
                             HorizontalAlignment="Left"
                             Background="Red"
-                            Foreground="White"
                             Command="{Binding ClearTransactionCommand}"
+                            Foreground="White"
                             Style="{StaticResource MaterialDesignRaisedButton}">
                         <TextBlock Text="Annuler"
                                    TextAlignment="Center"
@@ -383,21 +401,14 @@
                             Margin="5"
                             HorizontalAlignment="Stretch"
                             Background="Green"
-                            Foreground="White"
                             Command="{Binding CompleteTransactionCommand}"
+                            Foreground="White"
                             Style="{StaticResource MaterialDesignRaisedButton}">
                         <TextBlock Text="Passer au paiement"
                                    TextAlignment="Center"
                                    TextWrapping="Wrap" />
                     </Button>
                 </Grid>
-                <StackPanel Grid.Row="3" Width="0" Height="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                    <TextBox Background="Transparent" Opacity="0" x:Name="ScanBox" Text="{Binding ScannedBarcode, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible">
-                        <TextBox.InputBindings>
-                            <KeyBinding Key="Enter" Command="{Binding ScanItemCommand}"/>
-                        </TextBox.InputBindings>
-                    </TextBox>
-                </StackPanel>
             </Grid>
         </materialDesign:Card>
     </materialDesign:DialogHost>

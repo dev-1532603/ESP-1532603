@@ -52,7 +52,7 @@ namespace CheckoutApp.ViewModel
         
         private void SearchProducts(string searchText)
         {
-            var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower()) || p.Code.Contains(searchText.ToLower())).ToList();
 
             SearchResults.Clear();
             foreach (var product in filtered)

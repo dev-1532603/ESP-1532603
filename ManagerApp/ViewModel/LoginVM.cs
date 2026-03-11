@@ -31,7 +31,7 @@ namespace ManagerApp.ViewModel
 
             try
             {
-                LoginResponseDTO response = await ApiProcessor.Login(Username, Password);
+                EmployeeDTO response = await ApiProcessor.Login(Username, Password);
                 MessageBox.Show("Connexion réussie.");
                 MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
             }

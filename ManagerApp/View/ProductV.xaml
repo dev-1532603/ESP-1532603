@@ -23,20 +23,24 @@
                            FontStyle="Italic"
                            Foreground="Gray"
                            Text="{Binding DialogMessage}" />
+
                 <TextBox Margin="5"
                          materialDesign:HintAssist.Hint="Nom"
+                         IsEnabled="{Binding IsDialogEnabled}"
                          IsReadOnly="{Binding IsDialogReadOnly}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Text="{Binding DialogName, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBox Margin="5"
-                         materialDesign:HintAssist.Hint="Prix"
-                         IsReadOnly="{Binding IsDialogReadOnly}"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding DialogPrice, UpdateSourceTrigger=PropertyChanged}" />
+                <materialDesign:NumericUpDown Margin="5"
+                                              materialDesign:HintAssist.Hint="Prix $"
+                                              IsEnabled="{Binding IsDialogEnabled}"
+                                              Minimum="0"
+                                              Style="{StaticResource MaterialDesignOutlinedNumericUpDown}"
+                                              Value="{Binding DialogPrice, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBox Margin="5"
                          materialDesign:HintAssist.Hint="Quantité en stock"
+                         IsEnabled="{Binding IsDialogEnabled}"
                          IsReadOnly="{Binding IsDialogReadOnly}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Text="{Binding DialogQuantityInStock, UpdateSourceTrigger=PropertyChanged}" />
@@ -46,19 +50,19 @@
                                VerticalAlignment="Center"
                                Text="Taxable" />
                     <ToggleButton IsChecked="{Binding DialogTaxable}"
-                                  IsEnabled="{Binding IsDialogToggleable}"
+                                  IsEnabled="{Binding IsDialogEnabled}"
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}" />
                 </StackPanel>
 
                 <ComboBox Margin="5"
                           materialDesign:HintAssist.Hint="Sous-catégorie"
                           DisplayMemberPath="Name"
-                          SelectedValuePath="Id"
-                          IsEnabled="{Binding IsDialogToggleable}"
+                          IsEnabled="{Binding IsDialogEnabled}"
                           IsReadOnly="{Binding IsDialogReadOnly}"
                           ItemsSource="{Binding Subcategories}"
                           SelectedItem="{Binding DialogSubcategory}"
                           SelectedValue="{Binding DialogSubcategoryId, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValuePath="Id"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -212,6 +216,7 @@
                 <DataGrid Grid.Row="2"
                           Grid.Column="1"
                           Margin="5"
+                          AlternatingRowBackground="{DynamicResource MaterialDesignDivider}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
@@ -219,11 +224,10 @@
                           HeadersVisibility="Column"
                           IsReadOnly="True"
                           ItemsSource="{Binding SearchResults}"
+                          RowBackground="Transparent"
                           SelectedItem="{Binding SelectedProduct}"
                           SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          RowBackground="Transparent"
-                          AlternatingRowBackground="{DynamicResource MaterialDesignDivider}">
+                          SelectionUnit="FullRow">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="auto"
                                             Binding="{Binding Code}"

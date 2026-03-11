@@ -11,7 +11,6 @@ namespace SuperCchicLibrary.Service
 {
     public class OrderReceipt
     {
-        // Propriétés pour stocker les données du reçu
         public List<OrderDetailDTO> items { get; set; }
         public string comment { get; set; }
         public decimal subtotal { get; set; }
@@ -19,7 +18,6 @@ namespace SuperCchicLibrary.Service
         public decimal tps { get; set; }
         public decimal tvq { get; set; }
         public DateTime date {  get; set; }
-
         public OrderReceipt() { }
         public OrderReceipt(List<OrderDetailDTO> items, string comment, decimal subtotal, decimal transactiontotal, decimal tps, decimal tvq, DateTime date)
         {
@@ -33,12 +31,11 @@ namespace SuperCchicLibrary.Service
         }
         public static void PrintReceipt(OrderReceipt orderReceipt)
         {
-            GenerateReceipt(orderReceipt.items, orderReceipt.comment, orderReceipt.subtotal, orderReceipt.tps, orderReceipt.tvq, orderReceipt.transactiontotal, orderReceipt.date);
+            GenerateReceipt(orderReceipt.items, orderReceipt.comment, orderReceipt.subtotal, orderReceipt.tps, orderReceipt.tvq, orderReceipt.transactiontotal, orderReceipt.date, true);
         }
         // Méthode statique pour générer ET sauvegarder le PDF
-        public static OrderReceipt GenerateReceipt(List<OrderDetailDTO> items, string comment, decimal subtotal, decimal tps, decimal tvq, decimal transactiontotal, DateTime date)
+        public static OrderReceipt GenerateReceipt(List<OrderDetailDTO> items, string comment, decimal subtotal, decimal tps, decimal tvq, decimal transactiontotal, DateTime date, bool isReprint = false)
         {
-            // Définir la licence AVANT de créer le document
             QuestPDF.Settings.License = LicenseType.Community;
 
             var receipt = new OrderReceipt
@@ -50,6 +47,9 @@ namespace SuperCchicLibrary.Service
                 transactiontotal = transactiontotal,
                 date = date
             };
+
+            string title = isReprint ? "REÇU DE COMMANDE - COPIE" : "REÇU DE COMMANDE";
+            string filename = isReprint ? $"receiptcopy{date:yyyyMMddHHmmss}.pdf" : $"receipt{date:yyyyMMddHHmmss}.pdf";
 
             Document.Create(container =>
             {
@@ -64,10 +64,8 @@ namespace SuperCchicLibrary.Service
                     page.Header()
                         .Column(col =>
                         {
-                            col.Item().Text("REÇU DE COMMANDE")
-                                .Bold().FontSize(16).FontColor(Colors.Blue.Medium);
-                            col.Item().Text($"Date: {date:dd/MM/yyyy HH:mm}")
-                                .FontSize(8);
+                            col.Item().Text(title).Bold().FontSize(16).FontColor(Colors.Blue.Medium);
+                            col.Item().Text($"Date: {date:dd/MM/yyyy HH:mm}").FontSize(8);
                         });
 
                     // Contenu principal
@@ -102,6 +100,7 @@ namespace SuperCchicLibrary.Service
                                             .PaddingVertical(3);
                                 });
 
+                              
                                 // Produits
                                 foreach (var item in items)
                                 {
@@ -146,7 +145,7 @@ namespace SuperCchicLibrary.Service
                         .FontSize(8);
                 });
             })
-            .GeneratePdf($"receipt{date:yyyyMMddHHmmss}.pdf");
+            .GeneratePdf(filename);
 
             return receipt;
         }

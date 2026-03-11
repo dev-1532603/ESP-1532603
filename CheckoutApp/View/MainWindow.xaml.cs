@@ -21,10 +21,10 @@ namespace CheckoutApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        public LoginVM _loginVM;
         public TransactionVM _transactionVM;
         public ProductSearchVM _productSearchVM;
         public DiscountVM _discountVM;
-        public LoginVM _loginVM;
         public MainWindow()
         {
             ApiHelper.InitializeClient();

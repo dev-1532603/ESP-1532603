@@ -8,12 +8,6 @@ namespace SuperCchicLibrary
         public string? Username { get; set; }
         public string? Password { get; set; }
     }
-    public class LoginResponseDTO
-    {
-        public int? Id { get; set; }
-        public string? Username { get; set; }
-        public string? Name { get; set; }
-    }
     public class ProductDTO
     {
         public string Name { get; set; } = string.Empty;
@@ -38,7 +32,9 @@ namespace SuperCchicLibrary
     }
     public class EmployeeDTO
     {
+        public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+
     }
 }

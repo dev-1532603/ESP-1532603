@@ -11,7 +11,7 @@ namespace SuperCchicLibrary.Service
 {
     public class ApiProcessor
     {
-        public static Task<LoginResponseDTO> Login(string username, string password)
+        public static Task<EmployeeDTO> Login(string username, string password)
         {
             string url = "Employees/Login";
             string json = JsonConvert.SerializeObject(new { username, password });
@@ -22,7 +22,7 @@ namespace SuperCchicLibrary.Service
             {
                 if (task.Result.IsSuccessStatusCode)
                 {
-                    return task.Result.Content.ReadAsAsync<LoginResponseDTO>();
+                    return task.Result.Content.ReadAsAsync<EmployeeDTO>();
                 }
                 else
                 {

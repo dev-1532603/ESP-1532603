@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows;
 using SuperCchicLibrary;
+using System.Windows.Controls;
 
 namespace CheckoutApp.ViewModel
 {
@@ -26,9 +27,14 @@ namespace CheckoutApp.ViewModel
 
             try
             {
-                LoginResponseDTO response = await ApiProcessor.Login(Username, Password);
-                MessageBox.Show("Connexion réussie.");
-                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+                EmployeeDTO employee = await ApiProcessor.Login(Username, Password);
+
+                if (employee != null)
+                {
+                    AuthenticationService.Instance.CurrentEmployee = employee;
+                    MessageBox.Show("Connexion réussie.");
+                    (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+                }
             }
             catch (Exception ex)
             {

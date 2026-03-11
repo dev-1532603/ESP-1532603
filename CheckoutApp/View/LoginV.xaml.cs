@@ -24,6 +24,6 @@ namespace CheckoutApp.View
         public LoginV()
         {
             InitializeComponent();
-        }
+        }     
     }
 }

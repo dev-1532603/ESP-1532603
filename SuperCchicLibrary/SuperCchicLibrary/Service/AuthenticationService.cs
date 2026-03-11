@@ -10,15 +10,15 @@ namespace SuperCchicLibrary.Service
 {
     public interface IEmployeeService
     {
-        Employee? CurrentEmployee { get; set; }
+        EmployeeDTO? CurrentEmployee { get; set; }
         bool IsLoggedIn { get; }
     }
     public class AuthenticationService : IEmployeeService, INotifyPropertyChanged
     {
         private static readonly Lazy<AuthenticationService> _instance = new(() => new AuthenticationService());
         public static AuthenticationService Instance { get { return _instance.Value; } }
-        private Employee? _currentEmployee;
-        public Employee? CurrentEmployee
+        private EmployeeDTO? _currentEmployee;
+        public EmployeeDTO? CurrentEmployee
         {
             get => _currentEmployee;
             set

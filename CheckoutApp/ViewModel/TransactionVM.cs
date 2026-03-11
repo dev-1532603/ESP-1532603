@@ -5,8 +5,10 @@ using IronSoftware.Drawing;
 using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.DirectoryServices;
 using System.Net.Http;
+using System.Windows;
 
 
 namespace CheckoutApp.ViewModel
@@ -74,6 +76,48 @@ namespace CheckoutApp.ViewModel
             Tvq = taxableSubtotal * TVQAMOUNT;
             TransactionTotal = Subtotal + Tps + Tvq;
         }
+        private void UpdateItemQuantity(int newQuantity)
+        {
+            if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
+            {
+                SelectedTransactionItem.Quantity = newQuantity;
+                UpdateTransaction();
+            }
+        }
+        //Callback method
+        public void AddToTransaction(Product product)
+        {
+            TransactionItem item = new TransactionItem(product.Id, product.Code, product.Name, 1, product.Price, product.Taxable);
+
+            TransactionItem? existingItem = TransactionItems.FirstOrDefault(i => i.ProductName == item.ProductName);
+
+            if (existingItem != null)
+            {
+                existingItem.Quantity++;
+            }
+            else
+            {
+                TransactionItems.Add(item);
+            }
+        }
+        public void EnterProductManually(string code)
+        {
+            Product product = _products.FirstOrDefault(p => p.Code == code);
+            if (product != null)
+            {
+                AddToTransaction(product);
+            }
+            else
+            {
+                MessageBox.Show("Produit introuvable.");
+            }
+        }
+        //Callback method
+        public void ApplyTransactionDiscount(EmployeeDTO employee)
+        {
+            _isDiscountApplied = true;
+            UpdateTransaction();
+        }
         [RelayCommand]
         public void ClearTransaction()
         {
@@ -85,34 +129,13 @@ namespace CheckoutApp.ViewModel
             TransactionComment = string.Empty;
             _isDiscountApplied = false;
         }
-        //Callback method
-        public void AddToTransaction(Product product)
-        {
-            TransactionItem item = new TransactionItem(product.Id, product.Code, product.Name, 1, product.Price, product.Taxable);
-
-            TransactionItem? existingItem = TransactionItems.FirstOrDefault(i => i.ProductName == item.ProductName);
-            if (existingItem != null)
-            {
-                existingItem.Quantity++;
-            }
-            else
-            {
-                TransactionItems.Add(item);
-            }
-        }
-        //Callback method
-        public void ApplyTransactionDiscount(EmployeeDTO employee)
-        {
-            _isDiscountApplied = true;
-            UpdateTransaction();
-        }
         [RelayCommand]
         public void OpenQuantityDialog()
         {
             if (SelectedTransactionItem == null) return;
             DialogTitle = $"Modifier la quantité — {SelectedTransactionItem.ProductName}";
             DialogHint = "Nouvelle quantité";
-            DialogInputText = SelectedTransactionItem.Quantity.ToString();
+            DialogInputText = "";
             _onDialogConfirm = result =>
             {
                 if (int.TryParse(result, out int qty) && qty > 0)
@@ -178,14 +201,6 @@ namespace CheckoutApp.ViewModel
                 TransactionItems.Remove(SelectedTransactionItem);
             }
         }
-        private void UpdateItemQuantity(int newQuantity)
-        {
-            if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
-            {
-                SelectedTransactionItem.Quantity = newQuantity;
-                UpdateTransaction();
-            }
-        }
         [RelayCommand]
         public void ScanItem()
         {
@@ -196,8 +211,13 @@ namespace CheckoutApp.ViewModel
                 {
                     AddToTransaction(scannedProduct);
                 }
+                else
+                {
+                    MessageBox.Show("Produit introuvable.");
+                }
             }
             ScannedBarcode = "";
         }
+
     }
 }

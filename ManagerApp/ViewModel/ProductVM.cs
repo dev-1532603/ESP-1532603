@@ -27,7 +27,7 @@ namespace ManagerApp.ViewModel
         [ObservableProperty]
         private Product? _selectedProduct;
         [ObservableProperty]
-        private bool _isDialogOpen, _isDialogReadOnly, _isDialogToggleable;
+        private bool _isDialogOpen, _isDialogReadOnly, _isDialogEnabled;
         [ObservableProperty]
         private string _dialogTitle = string.Empty;
         [ObservableProperty]
@@ -75,7 +75,7 @@ namespace ManagerApp.ViewModel
         }
         private void SearchProducts(string searchText)
         {
-            var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower()) || p.Code.Contains(searchText.ToLower())).ToList();
 
             SearchResults.Clear();
             foreach (var product in filtered)
@@ -96,7 +96,7 @@ namespace ManagerApp.ViewModel
             DialogSubcategory = null;
             DialogSubcategoryId = Subcategories?.FirstOrDefault()?.Id ?? 0; 
             IsDialogReadOnly = false;
-            IsDialogToggleable = true;
+            IsDialogEnabled = true;
             _onDialogConfirm = () => AddProduct();
             IsDialogOpen = true;
         }
@@ -118,7 +118,7 @@ namespace ManagerApp.ViewModel
             DialogSubcategory = SelectedProduct.Subcategory;
             DialogSubcategoryId = SelectedProduct.Subcategory.Id;
             IsDialogReadOnly = false;
-            IsDialogToggleable = true;
+            IsDialogEnabled = true;
             _onDialogConfirm = () => EditProduct();
             IsDialogOpen = true;
         }
@@ -139,7 +139,7 @@ namespace ManagerApp.ViewModel
             DialogTaxable = SelectedProduct.Taxable;
             DialogSubcategory = SelectedProduct.Subcategory;
             IsDialogReadOnly = true;
-            IsDialogToggleable = false;
+            IsDialogEnabled = false;
             _onDialogConfirm = () => DeleteProduct();
             IsDialogOpen = true;
         }
@@ -177,7 +177,7 @@ namespace ManagerApp.ViewModel
         {
             var newProduct = new Product
             {
-                Name = DialogName,
+                Name = char.ToUpper(DialogName[0]) + DialogName.Substring(1),
                 Price = DialogPrice,
                 QuantityInStock = DialogQuantityInStock,
                 Taxable = DialogTaxable,
