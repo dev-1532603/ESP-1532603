@@ -64,7 +64,12 @@ namespace CheckoutApp.View
         public void ShowTransactionView()
         {
             HideAllViews();
-            transactionV.Visibility = Visibility.Visible; 
+            transactionV.Visibility = Visibility.Visible;
+            // fonction pour attendre que le rendu soit loaded, pour focus sur la scanbox, sinon problème d'ordre de load avec le focus
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+            {
+                transactionV.ScanBox.Focus();
+            }));
         }
 
         public void ShowProductSearchView()

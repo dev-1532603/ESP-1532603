@@ -139,21 +139,10 @@
                                        Text="Actions" />
                         </Border>
                     </GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" >
                         <!--  Rangée 1  -->
-                        <Button Grid.Row="0"
-                                Grid.Column="0"
-                                Margin="5"
+                        <Button 
+                                Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding OpenAddDialogCommand}"
@@ -166,9 +155,8 @@
                         </Button>
 
                         <!--  Rangée 2  -->
-                        <Button Grid.Row="1"
-                                Grid.Column="0"
-                                Margin="5"
+                        <Button 
+                                Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding OpenEditDialogCommand}"
@@ -181,9 +169,8 @@
                         </Button>
 
                         <!--  Rangée 3  -->
-                        <Button Grid.Row="2"
-                                Grid.Column="0"
-                                Margin="5"
+                        <Button 
+                                Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding OpenDeleteDialogCommand}"
@@ -195,10 +182,10 @@
                                        TextWrapping="Wrap" />
                         </Button>
 
+                        <Separator/>
                         <!--  Rangée 4  -->
-                        <Button Grid.Row="3"
-                                Grid.Column="0"
-                                Margin="5"
+                        <Button 
+                                Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding GenerateReportCommand}"
@@ -209,7 +196,7 @@
                                        TextAlignment="Center"
                                        TextWrapping="Wrap" />
                         </Button>
-                    </Grid>
+                    </StackPanel>
                 </GroupBox>
 
                 <!--  Liste des produits  -->

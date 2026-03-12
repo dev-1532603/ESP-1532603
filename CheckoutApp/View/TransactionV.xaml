@@ -13,8 +13,7 @@
              Background="White"
              mc:Ignorable="d" 
              PreviewTextInput="UserControl_PreviewTextInput"
-             PreviewKeyDown="UserControl_PreviewKeyDown"
-             FocusManager.FocusedElement="{Binding ElementName=ScanBox}">
+             PreviewKeyDown="UserControl_PreviewKeyDown">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
@@ -214,11 +213,11 @@
                              Visibility="Visible"
                              AcceptsReturn="False"
                              TextWrapping="NoWrap"
-                             MaxLines="1"
-                             >
-                        <!--<TextBox.InputBindings>
+                             Focusable="True"
+                             MaxLines="1">
+                        <TextBox.InputBindings>
                             <KeyBinding Key="Enter" Command="{Binding ScanItemCommand}" />
-                        </TextBox.InputBindings>-->
+                        </TextBox.InputBindings>
                     </TextBox>
                 </StackPanel>
 

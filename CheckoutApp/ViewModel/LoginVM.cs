@@ -34,15 +34,15 @@ namespace CheckoutApp.ViewModel
                     AuthenticationService.Instance.CurrentEmployee = employee;
                     MessageBox.Show("Connexion réussie.");
                     (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+
+                    Username = string.Empty;
+                    Password = string.Empty;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Login invalide");
             }
-
-            Username = string.Empty;
-            Password = string.Empty;
         }
     }
 }

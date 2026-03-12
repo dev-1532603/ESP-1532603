@@ -11,6 +11,8 @@
         Style="{StaticResource MaterialDesignWindow}"
         mc:Ignorable="d">
     <Grid>
-        <local:TransactionV x:Name="transactionV" Visibility="Visible" />
+        <local:TransactionV x:Name="transactionV" Visibility="Visible"/>
+        <local:AuthorizeView x:Name="authorizeV" Visibility="Collapsed"/>
+        <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed"/>
     </Grid>
 </Window>

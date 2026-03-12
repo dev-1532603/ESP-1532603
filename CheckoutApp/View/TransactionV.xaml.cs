@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CheckoutApp.ViewModel;
 using MaterialDesignThemes.Wpf;
+using MaterialDesignThemes.Wpf.Behaviors.Internal;
 
 namespace CheckoutApp.View
 {
@@ -25,14 +26,6 @@ namespace CheckoutApp.View
         public TransactionV()
         {
             InitializeComponent();
-
-            this.IsVisibleChanged += (s, e) =>
-            {
-                if ((bool)e.NewValue)
-                {
-                    ScanBox.Focus();
-                }
-            };
         }
 
         private void DiscountButton_Click(object sender, RoutedEventArgs e)
