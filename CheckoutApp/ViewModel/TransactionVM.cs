@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CheckoutApp.View;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IronBarCode;
 using IronSoftware.Drawing;
@@ -17,9 +18,10 @@ namespace CheckoutApp.ViewModel
     {
         const decimal TPSAMOUNT = 0.05m, TVQAMOUNT = 0.09975m, DISCOUNT = 0.9m;
         public List<Product> _products = new();
-        private bool _isDiscountApplied;
         private Action<string>? _onDialogConfirm;
         private List<OrderReceipt> _transactionHistory = new();
+        [ObservableProperty]
+        private bool _isDiscountApplied;
         [ObservableProperty]
         private ObservableCollection<TransactionItem> _transactionItems = new ObservableCollection<TransactionItem>();
         [ObservableProperty]
@@ -47,6 +49,7 @@ namespace CheckoutApp.ViewModel
 
             InitializeProductsAsync();
         }
+
         private async Task InitializeProductsAsync()
         {
             try
@@ -68,7 +71,7 @@ namespace CheckoutApp.ViewModel
         {
             decimal taxableSubtotal = TransactionItems.Where(i => i.Taxable).Sum(i => i.TotalPrice);
             Subtotal = TransactionItems.Sum(i => i.TotalPrice);
-            if (_isDiscountApplied)
+            if (IsDiscountApplied)
             {
                 Subtotal *= DISCOUNT;
             }
@@ -83,6 +86,7 @@ namespace CheckoutApp.ViewModel
                 SelectedTransactionItem.Quantity = newQuantity;
                 UpdateTransaction();
             }
+            SelectedTransactionItem = null;
         }
         //Callback method
         public void AddToTransaction(Product product)
@@ -94,6 +98,7 @@ namespace CheckoutApp.ViewModel
             if (existingItem != null)
             {
                 existingItem.Quantity++;
+                UpdateTransaction();
             }
             else
             {
@@ -103,19 +108,19 @@ namespace CheckoutApp.ViewModel
         public void EnterProductManually(string code)
         {
             Product product = _products.FirstOrDefault(p => p.Code == code);
-            if (product != null)
-            {
-                AddToTransaction(product);
-            }
-            else
+
+            if (product == null)
             {
                 MessageBox.Show("Produit introuvable.");
+                return;
             }
+            
+            AddToTransaction(product);
         }
         //Callback method
         public void ApplyTransactionDiscount(EmployeeDTO employee)
         {
-            _isDiscountApplied = true;
+            IsDiscountApplied = true;
             UpdateTransaction();
         }
         [RelayCommand]
@@ -127,19 +132,38 @@ namespace CheckoutApp.ViewModel
             Tvq = 0;
             TransactionTotal = 0;
             TransactionComment = string.Empty;
-            _isDiscountApplied = false;
+            IsDiscountApplied = false;
+            SelectedTransactionItem = null;
         }
         [RelayCommand]
         public void OpenQuantityDialog()
         {
-            if (SelectedTransactionItem == null) return;
+            if (SelectedTransactionItem == null)
+            {
+                MessageBox.Show("Veuillez sélectionné un produit.");
+                return;
+            }
+            if (TransactionItems.Count == 0)
+            {
+                MessageBox.Show("Aucune transaction en cours.");
+                return;
+            }
+
             DialogTitle = $"Modifier la quantité — {SelectedTransactionItem.ProductName}";
             DialogHint = "Nouvelle quantité";
             DialogInputText = "";
             _onDialogConfirm = result =>
             {
                 if (int.TryParse(result, out int qty) && qty > 0)
+                {
                     UpdateItemQuantity(qty);
+                    IsDialogOpen = false;
+                }
+                else
+                {
+                    MessageBox.Show("Entrer un nombre valide pour la quantité.");
+                    DialogInputText = "";
+                }
             };
             IsDialogOpen = true;
         }
@@ -152,7 +176,10 @@ namespace CheckoutApp.ViewModel
             _onDialogConfirm = result =>
             {
                 if (!string.IsNullOrWhiteSpace(result))
+                {
                     TransactionComment = result;
+
+                }
             };
             IsDialogOpen = true;
         }
@@ -161,7 +188,6 @@ namespace CheckoutApp.ViewModel
         public void ConfirmDialog()
         {
             _onDialogConfirm?.Invoke(DialogInputText);
-            IsDialogOpen = false;
         }
 
         [RelayCommand]
@@ -169,10 +195,22 @@ namespace CheckoutApp.ViewModel
         {
             IsDialogOpen = false;
         }
-        
+        [RelayCommand]
+        public void Logout()
+        {
+            ClearTransaction();
+            AuthenticationService.Instance.CurrentEmployee = null;
+            (Application.Current.MainWindow as MainWindow).ShowLoginView();
+        }
         [RelayCommand]
         public async Task CompleteTransaction()
         {
+            if(TransactionItems.Count == 0)
+            {
+                MessageBox.Show("Aucune transaction en cours.");
+                return;
+            }
+            
             List<OrderDetailDTO> orderdetails = TransactionItem.ConvertToOrderDetails(TransactionItems.ToList());
             
             OrderDTO orderDTO = new OrderDTO
@@ -189,17 +227,34 @@ namespace CheckoutApp.ViewModel
             ClearTransaction();
         }
         [RelayCommand]
-        public void PrintLastReceipt()
-        {
-            OrderReceipt.PrintReceipt(_transactionHistory.Last());
-        }
-        [RelayCommand]
         public void RemoveFromTransaction()
         {
-            if(SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem)) 
+            if (SelectedTransactionItem == null)
+            {
+                MessageBox.Show("Veuillez sélectionner un produit.");
+                return;
+            }
+            if (TransactionItems.Count == 0)
+            {
+                MessageBox.Show("Aucune transaction en cours.");
+                return;
+            }
+            if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
             {
                 TransactionItems.Remove(SelectedTransactionItem);
             }
+            SelectedTransactionItem = null;
+        }
+        [RelayCommand]
+        public void PrintLastReceipt()
+        {
+            if (_transactionHistory.Count == 0)
+            {
+                MessageBox.Show("Aucun historique de transaction.");
+                return;
+            }
+
+            OrderReceipt.PrintReceipt(_transactionHistory.Last());
         }
         [RelayCommand]
         public void ScanItem()
@@ -218,6 +273,5 @@ namespace CheckoutApp.ViewModel
             }
             ScannedBarcode = "";
         }
-
     }
 }

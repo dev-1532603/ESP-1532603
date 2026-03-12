@@ -11,8 +11,14 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              Background="White"
-             mc:Ignorable="d">
-    <materialDesign:DialogHost CloseOnClickAway="True" IsOpen="{Binding IsDialogOpen}">
+             mc:Ignorable="d" 
+             PreviewTextInput="UserControl_PreviewTextInput"
+             PreviewKeyDown="UserControl_PreviewKeyDown"
+             FocusManager.FocusedElement="{Binding ElementName=ScanBox}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <materialDesign:DialogHost CloseOnClickAway="True" IsOpen="{Binding IsDialogOpen}" Identifier="dialogs">
         <materialDesign:DialogHost.DialogContent>
             <StackPanel MinWidth="220" Margin="20">
                 <TextBlock Margin="10"
@@ -63,6 +69,7 @@
                             Background="{DynamicResource PrimaryHueMidBrush}"
                             Content="Déconnexion"
                             Foreground="Black"
+                            Command="{Binding LogoutCommand}"
                             Style="{StaticResource MaterialDesignRaisedButton}" />
 
                     <Label HorizontalAlignment="Center"
@@ -204,10 +211,14 @@
                     <TextBox x:Name="ScanBox"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Text="{Binding ScannedBarcode, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="Visible">
-                        <TextBox.InputBindings>
+                             Visibility="Visible"
+                             AcceptsReturn="False"
+                             TextWrapping="NoWrap"
+                             MaxLines="1"
+                             >
+                        <!--<TextBox.InputBindings>
                             <KeyBinding Key="Enter" Command="{Binding ScanItemCommand}" />
-                        </TextBox.InputBindings>
+                        </TextBox.InputBindings>-->
                     </TextBox>
                 </StackPanel>
 
@@ -312,7 +323,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="4" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -357,8 +369,8 @@
 
                         <!--  Ligne de séparation pour le total  -->
                         <Separator Grid.Row="3"
-                                   Grid.ColumnSpan="2"
                                    Margin="0,5"
+                                   Grid.ColumnSpan="2"
                                    Background="#DDDDDD" />
 
                         <TextBlock Grid.Row="4"
@@ -372,6 +384,15 @@
                                    FontSize="15"
                                    FontWeight="Bold"
                                    Text="{Binding TransactionTotal, StringFormat={}{0:C2}}" />
+                        <TextBlock Grid.Row="5"
+                           HorizontalAlignment="Left"
+                           Margin="0,2"
+                           FontSize="11"
+                           FontStyle="Italic"
+                           Foreground="Green"
+                           Text="Rabais employé de 10% est appliqué"
+                           Visibility="{Binding IsDiscountApplied,
+                        Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
                 </Border>
 

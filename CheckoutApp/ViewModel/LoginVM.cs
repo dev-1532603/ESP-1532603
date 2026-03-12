@@ -40,6 +40,9 @@ namespace CheckoutApp.ViewModel
             {
                 MessageBox.Show("Login invalide");
             }
+
+            Username = string.Empty;
+            Password = string.Empty;
         }
     }
 }

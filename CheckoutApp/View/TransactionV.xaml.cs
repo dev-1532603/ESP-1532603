@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CheckoutApp.ViewModel;
+using MaterialDesignThemes.Wpf;
 
 namespace CheckoutApp.View
 {
@@ -25,7 +26,13 @@ namespace CheckoutApp.View
         {
             InitializeComponent();
 
-            Loaded += (s, e) => ScanBox.Focus();
+            this.IsVisibleChanged += (s, e) =>
+            {
+                if ((bool)e.NewValue)
+                {
+                    ScanBox.Focus();
+                }
+            };
         }
 
         private void DiscountButton_Click(object sender, RoutedEventArgs e)
@@ -37,14 +44,34 @@ namespace CheckoutApp.View
         {
             ((MainWindow)Window.GetWindow(this)).ShowProductSearchView();
         }
-        private void ScanBox_KeyDown(object sender, KeyEventArgs e)
+        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (DialogHost.IsDialogOpen("dialogs")) return;
+            if (e.Key != Key.Enter) return;
+
+            e.Handled = true;
+            ScanBox.Text = ScanBox.Text.Trim('\r', '\n');
+
+            if (!string.IsNullOrWhiteSpace(ScanBox.Text))
             {
                 var vm = DataContext as TransactionVM;
                 vm.ScanItemCommand.Execute(null);
                 ScanBox.Clear();
             }
+
+            ScanBox.Focus();
+        }
+        private void UserControl_PreviewTextInput(object sender, TextCompositionEventArgs e)     
+        {
+            // Si un dialog est ouvert, laisse passer
+            //var window = Window.GetWindow(this);
+            if (DialogHost.IsDialogOpen("dialogs")) return;
+
+            // Redirige le texte vers scanTextBox
+            int caret = ScanBox.CaretIndex;
+            ScanBox.Text = ScanBox.Text.Insert(caret, e.Text);
+            ScanBox.CaretIndex = caret + e.Text.Length;
+            e.Handled = true;
         }
     }
 }
