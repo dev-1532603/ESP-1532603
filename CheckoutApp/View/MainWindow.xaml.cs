@@ -21,15 +21,15 @@ namespace CheckoutApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ConfigurationVM _configurationVM;
         public LoginVM _loginVM;
         public TransactionVM _transactionVM;
         public ProductSearchVM _productSearchVM;
         public DiscountVM _discountVM;
         public MainWindow()
         {
-            ApiHelper.InitializeClient();
-
-            InitializeComponent();    
+            InitializeComponent();
+            ApiSetup();
             Initialize();
         }
         private void Initialize()
@@ -47,12 +47,22 @@ namespace CheckoutApp.View
             _productSearchVM.SetAddToCartAction(_transactionVM.AddToTransaction);
             _discountVM.SetApplyTransactionDiscount(_transactionVM.ApplyTransactionDiscount);
         }
+        private void ApiSetup()
+        {
+            if (!ApiHelper.InitializeClient())
+            {
+                _configurationVM = new ConfigurationVM();
+                configurationV.DataContext = _configurationVM;
+                ShowConfigurationView();
+            }
+        }
         private void HideAllViews()
         {
             loginV.Visibility = Visibility.Collapsed;
             transactionV.Visibility = Visibility.Collapsed;
             productSearchV.Visibility = Visibility.Collapsed;
             discountV.Visibility = Visibility.Collapsed;
+            configurationV.Visibility = Visibility.Collapsed;
         }
 
         public void ShowLoginView()
@@ -71,7 +81,6 @@ namespace CheckoutApp.View
                 transactionV.ScanBox.Focus();
             }));
         }
-
         public void ShowProductSearchView()
         {
             HideAllViews();
@@ -82,6 +91,11 @@ namespace CheckoutApp.View
         {
             HideAllViews();
             discountV.Visibility = Visibility.Visible;
+        }
+        public void ShowConfigurationView()
+        {
+            HideAllViews();
+            configurationV.Visibility = Visibility.Visible;
         }
     }
 }

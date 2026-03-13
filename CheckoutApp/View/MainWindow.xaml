@@ -19,5 +19,6 @@
         <local:TransactionV x:Name="transactionV" Visibility="Collapsed" />
         <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed" />
         <local:DiscountV x:Name="discountV" Visibility="Collapsed" />
+        <local:ConfigurationV x:Name="configurationV" Visibility="Collapsed"/>
     </Grid>
 </Window>
