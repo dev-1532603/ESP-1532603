@@ -24,7 +24,10 @@ namespace SelfCheckoutApp.View
         {
             InitializeComponent();
         }
-
+        private void BackToTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).ShowTransactionView();
+        }
         private void AppendText(string text)
         {
             int caretIndex = SearchTextBox.CaretIndex;
@@ -51,6 +54,5 @@ namespace SelfCheckoutApp.View
 
         private void Space_Click(object sender, RoutedEventArgs e) => AppendText(" ");
 
-        //private void Clear_Click(object sender, RoutedEventArgs e) => SearchTextBox.Clear();
     }
 }

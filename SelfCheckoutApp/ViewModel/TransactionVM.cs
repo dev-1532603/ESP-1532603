@@ -105,24 +105,6 @@ namespace SelfCheckoutApp.ViewModel
                 TransactionItems.Add(item);
             }
         }
-        public void EnterProductManually(string code)
-        {
-            Product product = _products.FirstOrDefault(p => p.Code == code);
-
-            if (product == null)
-            {
-                MessageBox.Show("Produit introuvable.");
-                return;
-            }
-
-            AddToTransaction(product);
-        }
-        //Callback method
-        public void ApplyTransactionDiscount(EmployeeDTO employee)
-        {
-            IsDiscountApplied = true;
-            UpdateTransaction();
-        }
         [RelayCommand]
         public void ClearTransaction()
         {
@@ -140,7 +122,7 @@ namespace SelfCheckoutApp.ViewModel
         {
             if (SelectedTransactionItem == null)
             {
-                MessageBox.Show("Veuillez sélectionné un produit.");
+                MessageBox.Show("Veuillez sélectionner un produit.");
                 return;
             }
             if (TransactionItems.Count == 0)
@@ -149,41 +131,29 @@ namespace SelfCheckoutApp.ViewModel
                 return;
             }
 
-            DialogTitle = $"Modifier la quantité — {SelectedTransactionItem.ProductName}";
-            DialogHint = "Nouvelle quantité";
-            DialogInputText = "";
-            _onDialogConfirm = result =>
+            AuthorizeAction(authorized =>
             {
-                if (int.TryParse(result, out int qty) && qty > 0)
-                {
-                    UpdateItemQuantity(qty);
-                    IsDialogOpen = false;
-                }
-                else
-                {
-                    MessageBox.Show("Entrer un nombre valide pour la quantité.");
-                    DialogInputText = "";
-                }
-            };
-            IsDialogOpen = true;
-        }
-        [RelayCommand]
-        public void OpenCommentDialog()
-        {
-            DialogTitle = "Ajouter un commentaire";
-            DialogHint = "Commentaire";
-            DialogInputText = string.Empty;
-            _onDialogConfirm = result =>
-            {
-                if (!string.IsNullOrWhiteSpace(result))
-                {
-                    TransactionComment = result;
+                if (!authorized) return;
 
-                }
-            };
-            IsDialogOpen = true;
+                DialogTitle = $"Modifier la quantité — {SelectedTransactionItem.ProductName}";
+                DialogHint = "Nouvelle quantité";
+                DialogInputText = "";
+                _onDialogConfirm = result =>
+                {
+                    if (int.TryParse(result, out int qty) && qty > 0)
+                    {
+                        UpdateItemQuantity(qty);
+                        IsDialogOpen = false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Entrer un nombre valide pour la quantité.");
+                        DialogInputText = "";
+                    }
+                };
+                IsDialogOpen = true;
+            });
         }
-
         [RelayCommand]
         public void ConfirmDialog()
         {
@@ -195,13 +165,7 @@ namespace SelfCheckoutApp.ViewModel
         {
             IsDialogOpen = false;
         }
-        //[RelayCommand]
-        //public void Logout()
-        //{
-        //    ClearTransaction();
-        //    AuthenticationService.Instance.CurrentEmployee = null;
-        //    (Application.Current.MainWindow as MainWindow).ShowLoginView();
-        //}
+
         [RelayCommand]
         public async Task CompleteTransaction()
         {
@@ -229,6 +193,7 @@ namespace SelfCheckoutApp.ViewModel
         [RelayCommand]
         public void RemoveFromTransaction()
         {
+
             if (SelectedTransactionItem == null)
             {
                 MessageBox.Show("Veuillez sélectionner un produit.");
@@ -239,11 +204,17 @@ namespace SelfCheckoutApp.ViewModel
                 MessageBox.Show("Aucune transaction en cours.");
                 return;
             }
-            if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
+
+            AuthorizeAction(authorized =>
             {
-                TransactionItems.Remove(SelectedTransactionItem);
-            }
-            SelectedTransactionItem = null;
+                if (!authorized) return;
+
+                if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
+                {
+                    TransactionItems.Remove(SelectedTransactionItem);
+                }
+                SelectedTransactionItem = null;
+            });
         }
         [RelayCommand]
         public void ScanItem()
@@ -261,6 +232,10 @@ namespace SelfCheckoutApp.ViewModel
                 }
             }
             ScannedBarcode = "";
+        }
+        private void AuthorizeAction(Action<bool> onComplete)
+        {
+            (Application.Current.MainWindow as MainWindow).ShowAuthorizeView(onComplete);
         }
     }
 }

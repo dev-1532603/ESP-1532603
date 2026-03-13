@@ -140,7 +140,7 @@ namespace CheckoutApp.ViewModel
         {
             if (SelectedTransactionItem == null)
             {
-                MessageBox.Show("Veuillez sélectionné un produit.");
+                MessageBox.Show("Veuillez sélectionner un produit.");
                 return;
             }
             if (TransactionItems.Count == 0)

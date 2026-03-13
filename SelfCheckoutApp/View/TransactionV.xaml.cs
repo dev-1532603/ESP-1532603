@@ -24,5 +24,9 @@ namespace SelfCheckoutApp.View
         {
             InitializeComponent();
         }
+        private void SearchProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Window.GetWindow(this)).ShowProductSearchView();
+        }
     }
 }

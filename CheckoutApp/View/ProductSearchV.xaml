@@ -38,7 +38,7 @@
             <!--  Zone de recherche  -->
             <TextBox Grid.Row="1"
                      Margin="5"
-                     materialDesign:HintAssist.Hint="Rechercher le nom, code ou catégorie du produit..."
+                     materialDesign:HintAssist.Hint="Rechercher le nom ou code du produit..."
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
 
@@ -74,6 +74,7 @@
                     <DataGridTextColumn Width="auto"
                                         Binding="{Binding Subcategory.Category.Name}"
                                         Header="Catégorie" />
+                    
                 </DataGrid.Columns>
             </DataGrid>
 

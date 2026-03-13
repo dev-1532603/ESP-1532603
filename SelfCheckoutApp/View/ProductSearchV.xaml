@@ -8,6 +8,7 @@
              xmlns:viewmodel="clr-namespace:SelfCheckoutApp.ViewModel"
              d:DesignHeight="450"
              d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewmodel:ProductSearchVM}"
              mc:Ignorable="d">
 
     <materialDesign:Card Margin="5">
@@ -20,6 +21,13 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Button Margin="5"
+                 HorizontalAlignment="Left"
+                 Background="{DynamicResource PrimaryHueMidBrush}"
+                 Click="BackToTransaction_Click"
+                 Content="Retour"
+                 Foreground="Black"
+                 Style="{StaticResource MaterialDesignRaisedButton}" />
             <!--  Titre  -->
             <TextBlock Grid.Row="0"
                        Margin="5"
@@ -32,9 +40,9 @@
             <TextBox x:Name="SearchTextBox"
                      Grid.Row="1"
                      Margin="5"
-                     materialDesign:HintAssist.Hint="Rechercher un produit"
+                     materialDesign:HintAssist.Hint="Rechercher le nom ou code du produit..."
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
 
             <!--  Tableau des résultats  -->
             <DataGrid Grid.Row="2"
@@ -45,7 +53,7 @@
                       GridLinesVisibility="Horizontal"
                       HeadersVisibility="Column"
                       IsReadOnly="True"
-                      ItemsSource="{Binding ProductSearchResults}"
+                      ItemsSource="{Binding SearchResults}"
                       SelectedItem="{Binding SelectedProduct}"
                       SelectionMode="Single">
 
@@ -60,121 +68,151 @@
                                         Binding="{Binding Price, StringFormat=C}"
                                         Header="Prix" />
                     <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Stock}"
+                                        Binding="{Binding QuantityInStock}"
                                         Header="Stock" />
                     <DataGridTextColumn Width="auto"
-                                        Binding="{Binding Category}"
+                                        Binding="{Binding Subcategory.Name}"
+                                        Header="Sous-catégorie" />
+                    <DataGridTextColumn Width="auto"
+                                        Binding="{Binding Subcategory.Category.Name}"
                                         Header="Catégorie" />
                 </DataGrid.Columns>
             </DataGrid>
 
             <materialDesign:Card Grid.Row="3" Margin="5">
                 <StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button Click="Key_Click"
+                            Content="1"
+                            Tag="1" />
+                        <Button Click="Key_Click"
+                            Content="2"
+                            Tag="2" />
+                        <Button Click="Key_Click"
+                            Content="3"
+                            Tag="3" />
+                        <Button Click="Key_Click"
+                            Content="4"
+                            Tag="4" />
+                        <Button Click="Key_Click"
+Content="5"
+Tag="5" />
+                        <Button Click="Key_Click"
+Content="6"
+Tag="6" />
+                        <Button Click="Key_Click"
+Content="7"
+Tag="7" />
+                        <Button Click="Key_Click"
+Content="8"
+Tag="8" />
+                        <Button Click="Key_Click"
+Content="9"
+Tag="9" />
+                        <Button Click="Key_Click"
+Content="0"
+Tag="0" />
+                    </StackPanel>
                     <!--  Rangée Q-P  -->
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Click="Key_Click"
-                                Content="Q"
-                                Tag="Q" />
+                Content="Q"
+                Tag="Q" />
                         <Button Click="Key_Click"
-                                Content="W"
-                                Tag="W" />
+                Content="W"
+                Tag="W" />
                         <Button Click="Key_Click"
-                                Content="E"
-                                Tag="E" />
+                Content="E"
+                Tag="E" />
                         <Button Click="Key_Click"
-                                Content="R"
-                                Tag="R" />
+                Content="R"
+                Tag="R" />
                         <Button Click="Key_Click"
-                                Content="T"
-                                Tag="T" />
+                Content="T"
+                Tag="T" />
                         <Button Click="Key_Click"
-                                Content="Y"
-                                Tag="Y" />
+                Content="Y"
+                Tag="Y" />
                         <Button Click="Key_Click"
-                                Content="U"
-                                Tag="U" />
+                Content="U"
+                Tag="U" />
                         <Button Click="Key_Click"
-                                Content="I"
-                                Tag="I" />
+                Content="I"
+                Tag="I" />
                         <Button Click="Key_Click"
-                                Content="O"
-                                Tag="O" />
+                Content="O"
+                Tag="O" />
                         <Button Click="Key_Click"
-                                Content="P"
-                                Tag="P" />
+                Content="P"
+                Tag="P" />
                     </StackPanel>
 
                     <!--  Rangée A-L  -->
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Click="Key_Click"
-                                Content="A"
-                                Tag="A" />
+                Content="A"
+                Tag="A" />
                         <Button Click="Key_Click"
-                                Content="S"
-                                Tag="S" />
+                Content="S"
+                Tag="S" />
                         <Button Click="Key_Click"
-                                Content="D"
-                                Tag="D" />
+                Content="D"
+                Tag="D" />
                         <Button Click="Key_Click"
-                                Content="F"
-                                Tag="F" />
+                Content="F"
+                Tag="F" />
                         <Button Click="Key_Click"
-                                Content="G"
-                                Tag="G" />
+                Content="G"
+                Tag="G" />
                         <Button Click="Key_Click"
-                                Content="H"
-                                Tag="H" />
+                Content="H"
+                Tag="H" />
                         <Button Click="Key_Click"
-                                Content="J"
-                                Tag="J" />
+                Content="J"
+                Tag="J" />
                         <Button Click="Key_Click"
-                                Content="K"
-                                Tag="K" />
+                Content="K"
+                Tag="K" />
                         <Button Click="Key_Click"
-                                Content="L"
-                                Tag="L" />
+                Content="L"
+                Tag="L" />
                     </StackPanel>
 
                     <!--  Rangée Z-M  -->
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Click="Key_Click"
-                                Content="Z"
-                                Tag="Z" />
+                Content="Z"
+                Tag="Z" />
                         <Button Click="Key_Click"
-                                Content="X"
-                                Tag="X" />
+                Content="X"
+                Tag="X" />
                         <Button Click="Key_Click"
-                                Content="C"
-                                Tag="C" />
+                Content="C"
+                Tag="C" />
                         <Button Click="Key_Click"
-                                Content="V"
-                                Tag="V" />
+                Content="V"
+                Tag="V" />
                         <Button Click="Key_Click"
-                                Content="B"
-                                Tag="B" />
+                Content="B"
+                Tag="B" />
                         <Button Click="Key_Click"
-                                Content="N"
-                                Tag="N" />
+                Content="N"
+                Tag="N" />
                         <Button Click="Key_Click"
-                                Content="M"
-                                Tag="M" />
-                        <Button Click="Key_Click"
-                                Content="-"
-                                Tag="-" />
+                Content="M"
+                Tag="M" />
                     </StackPanel>
-
-
                     <!--  espace + effacer  -->
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Width="160" Click="Space_Click">
                             <materialDesign:PackIcon Width="22"
-                                                     Height="22"
-                                                     Kind="KeyboardSpace" />
+                                     Height="22"
+                                     Kind="KeyboardSpace" />
                         </Button>
                         <Button Width="80" Click="Backspace_Click">
                             <materialDesign:PackIcon Width="22"
-                                                     Height="22"
-                                                     Kind="BackspaceOutline" />
+                                     Height="22"
+                                     Kind="BackspaceOutline" />
                         </Button>
                     </StackPanel>
                 </StackPanel>
@@ -182,7 +220,7 @@
 
             <!--  Boutons  -->
             <StackPanel Grid.Row="4"
-                        HorizontalAlignment="Right"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
                         Orientation="Horizontal">
                 <Button Grid.Column="0"
@@ -190,6 +228,7 @@
                         HorizontalAlignment="Left"
                         Background="Red"
                         Foreground="White"
+                        Click="BackToTransaction_Click"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Annuler"
                                TextAlignment="Center"
@@ -200,6 +239,7 @@
                         HorizontalAlignment="Stretch"
                         Background="Green"
                         Foreground="White"
+                        Command="{Binding AddToTransactionCommand}"
                         Style="{StaticResource MaterialDesignRaisedButton}">
                     <TextBlock Text="Confirmer"
                                TextAlignment="Center"

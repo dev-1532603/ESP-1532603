@@ -50,8 +50,9 @@ namespace SelfCheckoutApp.View
             productSearchV.Visibility = Visibility.Collapsed;
         }
 
-        public void ShowAuthorizeView()
+        public void ShowAuthorizeView(Action<bool> onComplete)
         {
+            _authorizeVM.OnAuthorizationComplete = onComplete;
             HideAllViews();
             authorizeV.Visibility = Visibility.Visible;
         }
@@ -61,10 +62,10 @@ namespace SelfCheckoutApp.View
             HideAllViews();
             transactionV.Visibility = Visibility.Visible;
             // fonction pour attendre que le rendu soit loaded, pour focus sur la scanbox, sinon problème d'ordre de load avec le focus
-            //Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
-            //{
-            //    transactionV.ScanBox.Focus();
-            //}));
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+            {
+                transactionV.ScanBox.Focus();
+            }));
         }
 
         public void ShowProductSearchView()

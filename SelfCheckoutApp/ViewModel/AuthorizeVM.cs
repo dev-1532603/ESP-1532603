@@ -23,11 +23,13 @@ namespace SelfCheckoutApp.ViewModel
             Password = string.Empty;
         }
 
+        public Action<bool>? OnAuthorizationComplete;
+
         [RelayCommand]
-        private async void Login()
+        private async void Authorize()
         {
-            if (string.IsNullOrEmpty(Username?.Trim())) return;
-            if (string.IsNullOrEmpty(Password?.Trim())) return;
+            if (string.IsNullOrEmpty(Username?.Trim())) return ;
+            if (string.IsNullOrEmpty(Password?.Trim())) return ;
 
             try
             {
@@ -35,16 +37,21 @@ namespace SelfCheckoutApp.ViewModel
 
                 if (employee != null)
                 {
-                    MessageBox.Show("Autorisation réussie.");
-                    (Application.Current.MainWindow as MainWindow).ShowTransactionView();
-
                     Username = string.Empty;
                     Password = string.Empty;
+                    OnAuthorizationComplete?.Invoke(true);
+                    OnAuthorizationComplete = null;
+                    (Application.Current.MainWindow as MainWindow).ShowTransactionView();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Autorisation invalide");
+                Username = string.Empty;
+                Password = string.Empty;
+                OnAuthorizationComplete?.Invoke(false);
+                OnAuthorizationComplete = null;
+                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
             }
         }
     }
