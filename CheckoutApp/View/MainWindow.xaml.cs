@@ -30,13 +30,13 @@ namespace CheckoutApp.View
         {
             InitializeComponent();
             ApiSetup();
-            Initialize();
+            
         }
         private void Initialize()
         {
             _loginVM = new LoginVM();
             _transactionVM = new TransactionVM();
-            _productSearchVM = new ProductSearchVM(_transactionVM._products);
+            _productSearchVM = new ProductSearchVM(_transactionVM.Products);
             _discountVM = new DiscountVM();
 
             loginV.DataContext = _loginVM;
@@ -47,14 +47,21 @@ namespace CheckoutApp.View
             _productSearchVM.SetAddToCartAction(_transactionVM.AddToTransaction);
             _discountVM.SetApplyTransactionDiscount(_transactionVM.ApplyTransactionDiscount);
         }
-        private void ApiSetup()
+        private async void ApiSetup()
         {
-            if (!ApiHelper.InitializeClient())
+            bool apiInitialized = await ApiHelper.InitializeClient();
+
+            if (!apiInitialized)
             {
                 _configurationVM = new ConfigurationVM();
                 configurationV.DataContext = _configurationVM;
+
                 ShowConfigurationView();
+
+                return;
             }
+            Initialize();
+            ShowLoginView();
         }
         private void HideAllViews()
         {

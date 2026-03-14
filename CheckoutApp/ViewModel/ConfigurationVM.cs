@@ -24,11 +24,11 @@ namespace CheckoutApp.ViewModel
         }
 
         [RelayCommand]
-        public void SaveConfig()
+        public async void SaveConfig()
         {
             if (string.IsNullOrEmpty(ApiBaseUrl)) return;
 
-            if(ApiHelper.SetupConfig(ApiBaseUrl))
+            if(await ApiHelper.SetupConfig(ApiBaseUrl))
             {
                 MessageBox.Show("Connexion à l'api établie.");
                 ApiHelper.InitializeClient();

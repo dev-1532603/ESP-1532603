@@ -17,9 +17,10 @@ namespace CheckoutApp.ViewModel
     public partial class TransactionVM : ObservableObject
     {
         const decimal TPSAMOUNT = 0.05m, TVQAMOUNT = 0.09975m, DISCOUNT = 0.9m;
-        public List<Product> _products = new();
         private Action<string>? _onDialogConfirm;
         private List<OrderReceipt> _transactionHistory = new();
+        [ObservableProperty]
+        public ObservableCollection<Product> _products = new();
         [ObservableProperty]
         private bool _isDiscountApplied;
         [ObservableProperty]
@@ -54,10 +55,11 @@ namespace CheckoutApp.ViewModel
         {
             try
             {
-                _products = await ApiProcessor.GetProducts() ?? new List<Product>();
+                List<Product> loadedProducts = await ApiProcessor.GetProducts() ?? new List<Product>();
 
+                Products = new ObservableCollection<Product>(loadedProducts);
                 //C'est pour avoir accès aux barcodes dans le bin debug
-                foreach (var item in _products)
+                foreach (var item in loadedProducts)
                 {
                     BarcodeService.GenerateBarcodeLabel(item);
                 }
@@ -65,6 +67,7 @@ namespace CheckoutApp.ViewModel
             catch (Exception ex)
             {
                 Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
+                Products = new ObservableCollection<Product>();
             }
         }
         private void UpdateTransaction()

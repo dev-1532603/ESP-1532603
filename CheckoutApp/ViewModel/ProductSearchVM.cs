@@ -10,7 +10,8 @@ namespace CheckoutApp.ViewModel
 {
     public partial class ProductSearchVM : ObservableObject
     {
-        private List<Product> _products = new List<Product>(); 
+        [ObservableProperty]
+        private ObservableCollection<Product> _products = new ObservableCollection<Product>(); 
         private Action<Product> _addToCart;
         [ObservableProperty]
         private string? _searchText;
@@ -19,10 +20,10 @@ namespace CheckoutApp.ViewModel
         [ObservableProperty]
         private Product? _selectedProduct;
 
-        public ProductSearchVM(List<Product> products)
+        public ProductSearchVM(ObservableCollection<Product> products)
         {
             SearchText = string.Empty;
-            _products = products;
+            Products = products;
             SearchResults = new ObservableCollection<Product>(products);
         }
         public void SetAddToCartAction(Action<Product> callback)

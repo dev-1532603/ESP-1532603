@@ -1,21 +1,36 @@
-﻿using IronBarCode;
-using IronSoftware.Drawing;
+﻿using ZXing;
+using ZXing.Windows.Compatibility;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace SuperCchicLibrary.Service
 {
     public class BarcodeService
     {
         const string COMPANYTPREFIX = "12345";
+        //WHEN I USED IRONBARCODE
+        //public static void GenerateBarcodeLabel(Product product)
+        //{
+        //    var font = new Font("Arial", FontStyle.Regular, 24f);
+        //    string formattedCode = product.Code.Substring(0, 11);
+        //    GeneratedBarcode barcode = BarcodeWriter.CreateBarcode(formattedCode, BarcodeWriterEncoding.UPCA);
+        //    barcode.AddAnnotationTextAboveBarcode(product.Name, font, Color.Black, 10);
+        //    barcode.AddBarcodeValueTextBelowBarcode(10);
+        //    barcode.ResizeTo(400, 120);
+        //    barcode.SetMargins(10);
+        //    barcode.SaveAsImage($"{product.Name}.png");
+        //}
         public static void GenerateBarcodeLabel(Product product)
         {
-            var font = new Font("Arial", FontStyle.Regular, 24f);
             string formattedCode = product.Code.Substring(0, 11);
-            GeneratedBarcode barcode = BarcodeWriter.CreateBarcode(formattedCode, BarcodeWriterEncoding.UPCA);
-            barcode.AddAnnotationTextAboveBarcode(product.Name, font, Color.Black, 10);
-            barcode.AddBarcodeValueTextBelowBarcode(10);
-            barcode.ResizeTo(400, 120);
-            barcode.SetMargins(10);
-            barcode.SaveAsImage($"{product.Name}.png");
+
+            var barcodeWriter = new BarcodeWriter
+            {
+                Format = BarcodeFormat.UPC_A
+            };
+
+            using Bitmap barcode = barcodeWriter.Write(formattedCode);
+            barcode.Save($"{product.Name}.png", ImageFormat.Png);
         }
         public static string GenerateBarcode(Product product)
         {
