@@ -49,6 +49,27 @@ namespace SuperCchicAPI.Controllers
             return dto;
 
         }
+        [HttpPost]
+        [Route("Login/Admin")]
+        public async Task<ActionResult<EmployeeDTO>> LoginAdmin([FromBody] LoginRequestDTO request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest("Le username et le mot de passe sont requis.");
+            }
+
+            var existingEmployee = await _context.Employees.Include(e => e.Department).FirstOrDefaultAsync(e => e.Username == request.Username && e.Password == request.Password && e.Department.Name == "Administration");
+
+            if (existingEmployee == null)
+            {
+                return Unauthorized();
+            }
+
+            EmployeeDTO dto = new EmployeeDTO { Id = existingEmployee.Id, Name = existingEmployee.Name, Username = existingEmployee.Username };
+
+            return dto;
+
+        }
         // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)

@@ -55,9 +55,11 @@ namespace CheckoutApp.ViewModel
         {
             try
             {
-                List<Product> loadedProducts = await ApiProcessor.GetProducts() ?? new List<Product>();
+                // ou  Products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
 
+                List<Product> loadedProducts = await ApiProcessor.GetProducts() ?? new List<Product>();
                 Products = new ObservableCollection<Product>(loadedProducts);
+
                 //C'est pour avoir accès aux barcodes dans le bin debug
                 foreach (var item in loadedProducts)
                 {

@@ -2,6 +2,7 @@
 using SuperCchicLibrary.Service;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,10 +27,24 @@ namespace SelfCheckoutApp.View
         public ProductSearchVM _productSearchVM;
         public MainWindow()
         {
-            ApiHelper.InitializeClient();
-
             InitializeComponent();
+            ApiSetup();
+        }
+        private async void ApiSetup()
+        {
+            bool apiInitialized = await ApiHelper.InitializeClient();
+
+            if (!apiInitialized)
+            {
+                ConfigurationVM configurationVM = new ConfigurationVM();
+                configurationV.DataContext = configurationVM;
+
+                ShowConfigurationView();
+
+                return;
+            }
             Initialize();
+            ShowTransactionView();
         }
         private void Initialize()
         {
@@ -48,6 +63,7 @@ namespace SelfCheckoutApp.View
             authorizeV.Visibility = Visibility.Collapsed;
             transactionV.Visibility = Visibility.Collapsed;
             productSearchV.Visibility = Visibility.Collapsed;
+            configurationV.Visibility = Visibility.Collapsed;
         }
 
         public void ShowAuthorizeView(Action<bool> onComplete)
@@ -67,11 +83,15 @@ namespace SelfCheckoutApp.View
                 transactionV.ScanBox.Focus();
             }));
         }
-
         public void ShowProductSearchView()
         {
             HideAllViews();
             productSearchV.Visibility = Visibility.Visible;
+        }
+        public void ShowConfigurationView()
+        {
+            HideAllViews();
+            configurationV.Visibility = Visibility.Visible;
         }
     }
 }

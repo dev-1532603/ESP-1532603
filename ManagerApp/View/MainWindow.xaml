@@ -13,7 +13,8 @@
         Style="{StaticResource MaterialDesignWindow}"
         mc:Ignorable="d">
     <Grid>
-        <local:LoginV x:Name="loginV" Visibility="Collapsed" />
-        <local:ProductV x:Name="productV" Visibility="Visible" />
+        <local:LoginV x:Name="loginV" Visibility="Visible" />
+        <local:ProductV x:Name="productV" Visibility="Collapsed" />
+        <local:ConfigurationV x:Name="configurationV" Visibility="Collapsed" />
     </Grid>
 </Window>

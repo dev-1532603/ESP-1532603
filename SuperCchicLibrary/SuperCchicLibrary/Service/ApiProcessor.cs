@@ -31,6 +31,26 @@ namespace SuperCchicLibrary.Service
                 }
             };
         }
+        public static async Task<EmployeeDTO> LoginAdmin(string username, string password)
+        {
+            string url = "Employees/Login/Admin";
+            string json = JsonConvert.SerializeObject(new { username, password });
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using (HttpResponseMessage response = await ApiHelper.ApiClient.SendAsync(request))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<EmployeeDTO>();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"{response.ReasonPhrase}: {error}");
+                }
+            };
+        }
         public static async Task<List<Product>> GetProducts()
         {
             string url = "Products";

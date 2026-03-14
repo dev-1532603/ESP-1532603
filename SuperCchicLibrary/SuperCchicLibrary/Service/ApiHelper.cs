@@ -15,6 +15,7 @@ namespace SuperCchicLibrary.Service
             try
             {
                 string? apiBaseAddress = await GetConfig();
+
                 if (string.IsNullOrEmpty(apiBaseAddress))
                 {
                     return false;

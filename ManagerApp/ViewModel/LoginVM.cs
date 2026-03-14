@@ -24,16 +24,20 @@ namespace ManagerApp.ViewModel
         }
 
         [RelayCommand]
-        private async void Login()
+        private async void LoginAdmin()
         {
             if (string.IsNullOrEmpty(Username?.Trim())) return;
             if (string.IsNullOrEmpty(Password?.Trim())) return;
 
             try
             {
-                EmployeeDTO response = await ApiProcessor.Login(Username, Password);
+                //test
+                AuthenticationService.Instance.CurrentEmployee = await ApiProcessor.LoginAdmin(Username, Password);
                 MessageBox.Show("Connexion réussie.");
-                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
+                (Application.Current.MainWindow as MainWindow).ShowProductView();
+
+                Username = string.Empty;
+                Password = string.Empty;
             }
             catch (Exception ex)
             {

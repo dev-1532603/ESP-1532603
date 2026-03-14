@@ -10,13 +10,14 @@
         Height="720"
         MinWidth="1280"
         MinHeight="720"
-        Style="{StaticResource MaterialDesignWindow}"
         Background="White"
+        Style="{StaticResource MaterialDesignWindow}"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d">
     <Grid>
-        <local:TransactionV x:Name="transactionV" Visibility="Visible"/>
-        <local:AuthorizeView x:Name="authorizeV" Visibility="Collapsed"/>
-        <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed"/>
+        <local:TransactionV x:Name="transactionV" Visibility="Visible" />
+        <local:AuthorizeView x:Name="authorizeV" Visibility="Collapsed" />
+        <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed" />
+        <local:ConfigurationV x:Name="configurationV" Visibility="Collapsed" />
     </Grid>
 </Window>
