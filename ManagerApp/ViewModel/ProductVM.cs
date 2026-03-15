@@ -156,7 +156,12 @@ namespace ManagerApp.ViewModel
 
             if (result == MessageBoxResult.Yes)
             {
-                //await ApiProcessor.GetReport();
+                var monthlyReport = await ApiProcessor.GetReport();
+
+                if (monthlyReport != null)
+                {
+                    QuestPdfService.PrintReport(monthlyReport);
+                }
             }
         }
         [RelayCommand]

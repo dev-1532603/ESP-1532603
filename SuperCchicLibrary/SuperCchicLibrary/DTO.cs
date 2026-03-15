@@ -22,6 +22,20 @@ namespace SuperCchicLibrary
         public int EmployeeId { get; set; }
         public List<OrderDetailDTO> OrderDetails { get; set; } = new();
     }
+    public class MonthlyReportDTO
+    {
+        public decimal TotalSales { get; set; }
+        public int TotalOrders { get; set; }
+        public decimal AverageOrderValue { get; set; }
+        public List<DailyReportDTO> DailyReports { get; set; } = new();
+    }
+    public class DailyReportDTO
+    {
+        public DayOfWeek DayOfWeek { get; set; }
+        public decimal TotalSales { get; set; }
+        public int TotalOrders { get; set; }
+        public decimal AverageOrderValue { get; set; }
+    }
     public class OrderDetailDTO
     {
         public int ProductId { get; set; }

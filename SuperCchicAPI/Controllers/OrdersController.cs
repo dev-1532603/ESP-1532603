@@ -49,5 +49,30 @@ namespace SuperCchicAPI.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
+        [HttpGet]
+        [Route("Report")]
+        public async Task<ActionResult<MonthlyReportDTO>> GetMonthlyReport()
+        {
+            var orders = await _context.Orders.Where(o => o.Date.Month == DateTime.Now.Month).ToListAsync();
+
+            var dailyReports = orders.GroupBy(o => o.Date.DayOfWeek).Select(d => new DailyReportDTO
+            {
+                DayOfWeek = d.Key,
+                TotalSales = d.Sum(o => o.TotalPrice),
+                TotalOrders = d.Count(),
+                AverageOrderValue = d.Average(o => o.TotalPrice)
+
+            }).OrderBy(d => d.DayOfWeek).ToList();
+
+            var monthlyReport = new MonthlyReportDTO
+            {
+                TotalSales = orders.Sum(o => o.TotalPrice),
+                TotalOrders = orders.Count(),
+                AverageOrderValue = orders.Average(o => o.TotalPrice),
+                DailyReports = dailyReports
+            };
+
+            return monthlyReport;
+        }
     }
 }

@@ -135,6 +135,9 @@
                 </GroupBox>
 
                 <TextBox x:Name="ScanBox"
+                         Opacity="0"
+                         Width="0"
+                         Height="0"
                          Grid.Row="2"
                          Grid.Column="1"
                          AcceptsReturn="False"

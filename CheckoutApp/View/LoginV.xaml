@@ -42,7 +42,7 @@
                                FontSize="28"
                                FontWeight="Bold"
                                Foreground="{DynamicResource PrimaryHueMidBrush}"
-                               Text="Super Cchic" />
+                               Text="Super Cchic - Caisse" />
                 </StackPanel>
 
                 <!--  Username Field  -->

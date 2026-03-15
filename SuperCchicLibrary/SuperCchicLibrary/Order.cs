@@ -17,7 +17,7 @@ namespace SuperCchicLibrary
         [Column("date_")]
         public DateTime Date { get; set; }
         [Column("total_price")]
-        public decimal Total_Price { get; set; }
+        public decimal TotalPrice { get; set; }
         [Column("id_employee")]
         [ForeignKey(nameof(Employee))]
         public int IdEmployee {  get; set; }
@@ -25,10 +25,10 @@ namespace SuperCchicLibrary
 
         public Order() { }
 
-        public Order(decimal total_Price, int idEmployee)
+        public Order(decimal totalPrice, int idEmployee)
         {
             Date = DateTime.Now;
-            Total_Price = total_Price;
+            TotalPrice = totalPrice;
             IdEmployee = idEmployee;
         }
     }
