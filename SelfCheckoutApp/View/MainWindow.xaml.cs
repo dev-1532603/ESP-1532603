@@ -22,9 +22,9 @@ namespace SelfCheckoutApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        public AuthorizeVM _authorizeVM;
-        public TransactionVM _transactionVM;
-        public ProductSearchVM _productSearchVM;
+        public AuthorizeVM authorizeVM;
+        public TransactionVM transactionVM;
+        public ProductSearchVM productSearchVM;
         public MainWindow()
         {
             InitializeComponent();
@@ -43,20 +43,20 @@ namespace SelfCheckoutApp.View
 
                 return;
             }
-            Initialize();
+            await Initialize();
             ShowTransactionView();
         }
-        private void Initialize()
+        private async Task Initialize()
         {
-            _authorizeVM = new AuthorizeVM();
-            _transactionVM = new TransactionVM();
-            _productSearchVM = new ProductSearchVM(_transactionVM._products);
+            authorizeVM = new AuthorizeVM();
+            transactionVM = new TransactionVM();
+            productSearchVM = new ProductSearchVM(await transactionVM.InitializeProductsAsync());
 
-            authorizeV.DataContext = _authorizeVM;
-            transactionV.DataContext = _transactionVM;
-            productSearchV.DataContext = _productSearchVM;
+            authorizeV.DataContext = authorizeVM;
+            transactionV.DataContext = transactionVM;
+            productSearchV.DataContext = productSearchVM;
 
-            _productSearchVM.SetAddToCartAction(_transactionVM.AddToTransaction);
+            productSearchVM.SetAddToCartAction(transactionVM.AddToTransaction);
         }
         private void HideAllViews()
         {
@@ -68,7 +68,7 @@ namespace SelfCheckoutApp.View
 
         public void ShowAuthorizeView(Action<bool> onComplete)
         {
-            _authorizeVM.OnAuthorizationComplete = onComplete;
+            authorizeVM.OnAuthorizationComplete = onComplete;
             HideAllViews();
             authorizeV.Visibility = Visibility.Visible;
         }

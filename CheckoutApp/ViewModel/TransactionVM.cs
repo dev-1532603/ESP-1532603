@@ -47,29 +47,27 @@ namespace CheckoutApp.ViewModel
             TransactionItems = new ObservableCollection<TransactionItem>();
 
             TransactionItems.CollectionChanged += (s, e) => UpdateTransaction();
-
-            InitializeProductsAsync();
         }
 
-        private async Task InitializeProductsAsync()
+        public async Task<ObservableCollection<Product>> InitializeProductsAsync()
         {
             try
             {
-                // ou  Products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
+                Products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
 
-                List<Product> loadedProducts = await ApiProcessor.GetProducts() ?? new List<Product>();
-                Products = new ObservableCollection<Product>(loadedProducts);
-
-                //C'est pour avoir accès aux barcodes dans le bin debug
-                foreach (var item in loadedProducts)
+                // Générer les étiquettes de code-barres pour chaque produit
+                // pour accès dans bin debug
+                foreach (var item in _products)
                 {
                     BarcodeService.GenerateBarcodeLabel(item);
                 }
+
+                return Products;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
-                Products = new ObservableCollection<Product>();
+                return Products = new ObservableCollection<Product>();
             }
         }
         private void UpdateTransaction()
@@ -86,6 +84,11 @@ namespace CheckoutApp.ViewModel
         }
         private void UpdateItemQuantity(int newQuantity)
         {
+            if(SelectedTransactionItem == null)
+            {
+                MessageBox.Show("Aucun produit sélectionné pour modifier la quantité.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
             {
                 SelectedTransactionItem.Quantity = newQuantity;
@@ -116,7 +119,7 @@ namespace CheckoutApp.ViewModel
 
             if (product == null)
             {
-                MessageBox.Show("Produit introuvable.");
+                MessageBox.Show("Produit introuvable avec ce code.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             
@@ -145,12 +148,13 @@ namespace CheckoutApp.ViewModel
         {
             if (SelectedTransactionItem == null)
             {
-                MessageBox.Show("Veuillez sélectionner un produit.");
+                MessageBox.Show("Veuillez sélectionner un produit pour modifier la quantité.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (TransactionItems.Count == 0)
             {
-                MessageBox.Show("Aucune transaction en cours.");
+
+                MessageBox.Show("Aucune transaction en cours.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -166,7 +170,7 @@ namespace CheckoutApp.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("Entrer un nombre valide pour la quantité.");
+                    MessageBox.Show("Veuillez entrer un nombre entier positif pour la quantité.", "Entrée invalide", MessageBoxButton.OK, MessageBoxImage.Warning);
                     DialogInputText = "";
                 }
             };
@@ -212,36 +216,49 @@ namespace CheckoutApp.ViewModel
         {
             if(TransactionItems.Count == 0)
             {
-                MessageBox.Show("Aucune transaction en cours.");
+                MessageBox.Show("Aucune transaction en cours.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            
-            List<OrderDetailDTO> orderdetails = TransactionItem.ConvertToOrderDetails(TransactionItems.ToList());
-            
-            OrderDTO orderDTO = new OrderDTO
-            { 
-                TotalPrice = TransactionTotal, 
-                EmployeeId = 1, 
-                OrderDetails = orderdetails 
-            };
+            try
+            {
+                List<OrderDetailDTO> orderdetails = TransactionItem.ConvertToOrderDetails(TransactionItems.ToList());
 
-            var order = await ApiProcessor.PostOrder(orderDTO);
-            
-            _transactionHistory.Add(OrderReceipt.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
+                OrderDTO orderDTO = new OrderDTO
+                {
+                    TotalPrice = TransactionTotal,
+                    EmployeeId = 1,
+                    OrderDetails = orderdetails
+                };
 
-            ClearTransaction();
+                var order = await ApiProcessor.PostOrder(orderDTO);
+
+                _transactionHistory.Add(OrderReceipt.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
+
+                MessageBox.Show("Transaction complétée avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                ClearTransaction();
+
+                // simulation de déplacement de l'application vers une autre vue
+                // normalement on irait vers une vue de paiment ou de confirmation
+                // pour l'instant on revient à la vue de transaction
+                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de la complétion de la transaction: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         [RelayCommand]
         public void RemoveFromTransaction()
         {
             if (SelectedTransactionItem == null)
             {
-                MessageBox.Show("Veuillez sélectionner un produit.");
+                MessageBox.Show("Veuillez sélectionner un produit à retirer.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (TransactionItems.Count == 0)
             {
-                MessageBox.Show("Aucune transaction en cours.");
+                MessageBox.Show("Aucune transaction en cours.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
@@ -255,7 +272,7 @@ namespace CheckoutApp.ViewModel
         {
             if (_transactionHistory.Count == 0)
             {
-                MessageBox.Show("Aucun historique de transaction.");
+                MessageBox.Show("Aucun reçu à imprimer.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -273,7 +290,7 @@ namespace CheckoutApp.ViewModel
                 }
                 else
                 {
-                    MessageBox.Show("Produit introuvable.");
+                    MessageBox.Show("Produit introuvable avec ce code-barres.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             ScannedBarcode = "";

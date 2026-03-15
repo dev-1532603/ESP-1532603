@@ -7,14 +7,14 @@ namespace SuperCchicLibrary.Service
     {
         public static string CONFIG_PATH = "ApiConfig.json";
 
-        private static string apiBaseAddress = string.Empty;
+        public static string? apiBaseAddress = string.Empty;
         public static HttpClient ApiClient { get; set; }
 
         public static async Task<bool> InitializeClient()
         {
             try
             {
-                string? apiBaseAddress = await GetConfig();
+                apiBaseAddress = await GetConfig();
 
                 if (string.IsNullOrEmpty(apiBaseAddress))
                 {
@@ -27,12 +27,11 @@ namespace SuperCchicLibrary.Service
                 ApiClient.DefaultRequestHeaders.Accept.Clear();
                 ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ApiHelper init fail: {ex.Message}");
+                Console.WriteLine($"Erreur lors de l'initialisation du client API : {ex.Message}");
                 return false;
             }
 
@@ -41,12 +40,11 @@ namespace SuperCchicLibrary.Service
         {
             if (!File.Exists(CONFIG_PATH))
             {
-                return null;
+                return string.Empty;
             }
-
-            string content = await File.ReadAllTextAsync(CONFIG_PATH);
             try
             {
+                string content = await File.ReadAllTextAsync(CONFIG_PATH);
                 return JsonConvert.DeserializeObject<string>(content) ?? string.Empty;
             }
             catch
@@ -73,7 +71,7 @@ namespace SuperCchicLibrary.Service
 
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-                client.SendAsync(request);
+                await client.SendAsync(request);
 
                 return true;
             }

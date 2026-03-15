@@ -34,7 +34,12 @@ namespace CheckoutApp.ViewModel
         [RelayCommand]
         private void ApplyEmployeeDiscount()
         {
-            if(SelectedEmployee != null && _applyTransactionDiscount != null)
+            if(SelectedEmployee == null)
+            {
+                MessageBox.Show("Veuillez sélectionner un employé pour appliquer la réduction.", "Aucun employé sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (SelectedEmployee != null && _applyTransactionDiscount != null)
             {
                 _applyTransactionDiscount(SelectedEmployee);
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();

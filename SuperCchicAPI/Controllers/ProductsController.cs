@@ -29,29 +29,6 @@ namespace SuperCchicAPI.Controllers
             return await _context.Products.Include(p => p.Subcategory).ThenInclude(s => s.Category).ToListAsync();
         }
 
-        [HttpGet]
-        [Route("/Search/{searchText}")]
-        public async Task<ActionResult<IEnumerable<Product>>> SearchProducts(string searchText)
-        {
-            var products = await _context.Products.Where(p => p.Name.Contains(searchText)).ToListAsync();
-
-            return products;
-        }
-
-        // GET: api/Products/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return product;
-        }
-
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -102,7 +79,6 @@ namespace SuperCchicAPI.Controllers
 
             product.Code = BarcodeService.GenerateBarcode(product);
             _context.Products.Update(product);
-
 
             await _context.SaveChangesAsync();
 

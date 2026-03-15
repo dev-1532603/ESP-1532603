@@ -20,7 +20,7 @@
 
             <!--  Titre  -->
             <TextBlock Grid.Row="0"
-                       Margin="0,0,0,20"
+                       Margin="5"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        FontWeight="Bold"
@@ -28,31 +28,35 @@
 
             <!--  TextBox URL  -->
             <StackPanel Grid.Row="1"
-                        Margin="0,0,0,20"
+                        Margin="5"
                         Orientation="Vertical">
-                <TextBlock Margin="0,0,0,5"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Text="URL de l'API" />
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Margin="10"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Text="URL de l'API" />
+                    <TextBox Width="350"
+                             materialDesign:HintAssist.Hint="https://monapi.exemple.com"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding ApiBaseUrl, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
 
-                <TextBox Width="350"
-                         materialDesign:HintAssist.Hint="https://monapi.exemple.com"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding ApiBaseUrl, UpdateSourceTrigger=PropertyChanged}" />
+
+
             </StackPanel>
 
             <!--  Boutons  -->
             <StackPanel Grid.Row="2"
-                        HorizontalAlignment="Right"
+                        HorizontalAlignment="Center"
                         Orientation="Horizontal">
-                <Button Margin="5,0"
+                <!--<Button Margin="5"
                         Background="Red"
                         Command="{Binding CancelCommand}"
                         Content="Annuler"
                         Foreground="White"
-                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                        Style="{StaticResource MaterialDesignRaisedButton}" />-->
 
-                <Button Margin="5,0"
+                <Button Margin="5"
                         Background="Green"
                         Command="{Binding SaveConfigCommand}"
                         Content="Enregistrer"

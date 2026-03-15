@@ -41,12 +41,12 @@ namespace SuperCchicAPI.Controllers
 
             if (existingEmployee == null)
             {
-                return Unauthorized();
+                return Unauthorized("Les identifiants sont invalides.");
             }
 
             EmployeeDTO dto = new EmployeeDTO{ Id = existingEmployee.Id, Name = existingEmployee.Name, Username = existingEmployee.Username };
 
-            return dto;
+            return Ok(dto);
 
         }
         [HttpPost]
@@ -58,93 +58,16 @@ namespace SuperCchicAPI.Controllers
                 return BadRequest("Le username et le mot de passe sont requis.");
             }
 
-            var existingEmployee = await _context.Employees.Include(e => e.Department).FirstOrDefaultAsync(e => e.Username == request.Username && e.Password == request.Password && e.Department.Name == "Administration");
+            var existingEmployee = await _context.Employees.Include(e => e.Department).FirstOrDefaultAsync(e => e.Username == request.Username && e.Password == request.Password && e.IdDepartment == 8);
 
             if (existingEmployee == null)
             {
-                return Unauthorized();
+                return Unauthorized("Identifiants invalides ou l'utilisateur n'est pas administrateur.");
             }
 
             EmployeeDTO dto = new EmployeeDTO { Id = existingEmployee.Id, Name = existingEmployee.Name, Username = existingEmployee.Username };
 
-            return dto;
-
-        }
-        // GET: api/Employees/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return employee;
-        }
-
-        // PUT: api/Employees/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
-        {
-            if (id != employee.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(employee).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Employees
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
-        {
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
-        }
-
-        // DELETE: api/Employees/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.Id == id);
+            return Ok(dto);
         }
     }
 }

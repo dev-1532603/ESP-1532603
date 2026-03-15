@@ -23,13 +23,12 @@ namespace ManagerApp.ViewModel
 
             if(await ApiHelper.SetupConfig(ApiBaseUrl))
             {
-                MessageBox.Show("Connexion à l'api établie.");
-                ApiHelper.InitializeClient();
-                (Application.Current.MainWindow as MainWindow).ShowLoginView();
+                MessageBox.Show("Configuration sauvegardée avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+                (Application.Current.MainWindow as MainWindow).ApiSetup();
             }
             else
             {
-                MessageBox.Show("Connexion échouée.");
+                MessageBox.Show("Échec de la configuration. Veuillez vérifier l'URL et réessayer.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

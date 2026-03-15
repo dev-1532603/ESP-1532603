@@ -5,14 +5,15 @@
         xmlns:local="clr-namespace:SelfCheckoutApp.View"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="MainWindow"
+        Title="Super Cchic - Libre-service"
         Width="1280"
         Height="720"
         MinWidth="1280"
         MinHeight="720"
-        Background="White"
+        Background="{DynamicResource MaterialDesignPaper}"
         Style="{StaticResource MaterialDesignWindow}"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow"
         mc:Ignorable="d">
     <Grid>
         <local:TransactionV x:Name="transactionV" Visibility="Visible" />

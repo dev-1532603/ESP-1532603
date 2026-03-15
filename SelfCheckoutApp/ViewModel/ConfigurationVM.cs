@@ -23,13 +23,13 @@ namespace SelfCheckoutApp.ViewModel
 
             if (await ApiHelper.SetupConfig(ApiBaseUrl))
             {
-                MessageBox.Show("Connexion à l'api établie.");
+                MessageBox.Show("Configuration sauvegardée avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
                 ApiHelper.InitializeClient();
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();
             }
             else
             {
-                MessageBox.Show("Connexion échouée.");
+                MessageBox.Show("Échec de la configuration. Veuillez vérifier l'URL et réessayer.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

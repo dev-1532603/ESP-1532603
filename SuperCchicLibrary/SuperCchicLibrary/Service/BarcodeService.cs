@@ -1,7 +1,9 @@
-﻿using ZXing;
-using ZXing.Windows.Compatibility;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using ZXing;
+using ZXing.Common;
+using ZXing.Windows.Compatibility;
 
 namespace SuperCchicLibrary.Service
 {
@@ -22,15 +24,23 @@ namespace SuperCchicLibrary.Service
         //}
         public static void GenerateBarcodeLabel(Product product)
         {
-            string formattedCode = product.Code.Substring(0, 11);
+            string code = product.Code.Substring(0, 11);
 
-            var barcodeWriter = new BarcodeWriter
+            var writer = new BarcodeWriter<Bitmap>
             {
-                Format = BarcodeFormat.UPC_A
+                Format = BarcodeFormat.UPC_A,
+                Options = new EncodingOptions
+                {
+                    Width = 400,
+                    Height = 180,
+                    Margin = 10,
+                    PureBarcode = false 
+                },
+                Renderer = new BitmapRenderer()
             };
 
-            using Bitmap barcode = barcodeWriter.Write(formattedCode);
-            barcode.Save($"{product.Name}.png", ImageFormat.Png);
+            using var bitmap = writer.Write(code);
+            bitmap.Save($"{product.Name}.png", ImageFormat.Png);
         }
         public static string GenerateBarcode(Product product)
         {

@@ -9,7 +9,6 @@
              d:DataContext="{d:DesignInstance Type=viewmodel:ProductVM}"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             Background="White"
              mc:Ignorable="d">
     <materialDesign:DialogHost CloseOnClickAway="True" IsOpen="{Binding IsDialogOpen}">
         <materialDesign:DialogHost.DialogContent>
@@ -31,19 +30,19 @@
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Text="{Binding DialogName, UpdateSourceTrigger=PropertyChanged}" />
 
-                <materialDesign:NumericUpDown Margin="5"
+                <materialDesign:DecimalUpDown Margin="5"
                                               materialDesign:HintAssist.Hint="Prix $"
                                               IsEnabled="{Binding IsDialogEnabled}"
                                               Minimum="0"
-                                              Style="{StaticResource MaterialDesignOutlinedNumericUpDown}"
+                                              Style="{StaticResource MaterialDesignOutlinedDecimalUpDown}"
                                               Value="{Binding DialogPrice, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBox Margin="5"
-                         materialDesign:HintAssist.Hint="Quantité en stock"
-                         IsEnabled="{Binding IsDialogEnabled}"
-                         IsReadOnly="{Binding IsDialogReadOnly}"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding DialogQuantityInStock, UpdateSourceTrigger=PropertyChanged}" />
+                <materialDesign:NumericUpDown Margin="5"
+                                              materialDesign:HintAssist.Hint="Quantité en stock"
+                                              IsEnabled="{Binding IsDialogEnabled}"
+                                              Minimum="0"
+                                              Style="{StaticResource MaterialDesignOutlinedNumericUpDown}"
+                                              Value="{Binding DialogQuantityInStock, UpdateSourceTrigger=PropertyChanged}" />
 
                 <StackPanel Margin="5" Orientation="Horizontal">
                     <TextBlock Margin="5"
@@ -60,7 +59,6 @@
                           IsEnabled="{Binding IsDialogEnabled}"
                           IsReadOnly="{Binding IsDialogReadOnly}"
                           ItemsSource="{Binding Subcategories}"
-                          SelectedItem="{Binding DialogSubcategory}"
                           SelectedValue="{Binding DialogSubcategoryId, UpdateSourceTrigger=PropertyChanged}"
                           SelectedValuePath="Id"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}" />
@@ -100,6 +98,7 @@
                     <Button Margin="5"
                             HorizontalAlignment="Left"
                             Background="{DynamicResource PrimaryHueMidBrush}"
+                            Command="{Binding LogoutCommand}"
                             Content="Déconnexion"
                             Foreground="Black"
                             Style="{StaticResource MaterialDesignRaisedButton}" />
@@ -139,10 +138,9 @@
                                        Text="Actions" />
                         </Border>
                     </GroupBox.Header>
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" >
+                    <StackPanel VerticalAlignment="Top" Orientation="Vertical">
                         <!--  Rangée 1  -->
-                        <Button 
-                                Margin="5,10"
+                        <Button Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding OpenAddDialogCommand}"
@@ -155,8 +153,7 @@
                         </Button>
 
                         <!--  Rangée 2  -->
-                        <Button 
-                                Margin="5,10"
+                        <Button Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding OpenEditDialogCommand}"
@@ -169,8 +166,7 @@
                         </Button>
 
                         <!--  Rangée 3  -->
-                        <Button 
-                                Margin="5,10"
+                        <Button Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding OpenDeleteDialogCommand}"
@@ -182,10 +178,9 @@
                                        TextWrapping="Wrap" />
                         </Button>
 
-                        <Separator/>
+                        <Separator />
                         <!--  Rangée 4  -->
-                        <Button 
-                                Margin="5,10"
+                        <Button Margin="5,10"
                                 HorizontalAlignment="Stretch"
                                 Background="{DynamicResource PrimaryHueMidBrush}"
                                 Command="{Binding GenerateReportCommand}"

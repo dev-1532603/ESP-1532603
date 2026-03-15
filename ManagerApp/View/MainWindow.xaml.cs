@@ -2,6 +2,7 @@
 using ManagerApp.ViewModel;
 using SuperCchicLibrary.Service;
 using System.Configuration;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Windows;
 
@@ -12,14 +13,21 @@ namespace ManagerApp.View
     {
         public MainWindow()
         {
-            ApiSetup();
-
             InitializeComponent();
+            ApiSetup();
         }
-        private async void ApiSetup()
+        public async void ApiSetup()
         {
             bool apiInitialized = await ApiHelper.InitializeClient();
 
+            if (apiInitialized)
+            {
+                if(!await ApiHelper.GetApiStatus(ApiHelper.apiBaseAddress))
+                {
+                    MessageBox.Show("Erreur de connexion à l'API, veuillez vérifier les configurations.", "API Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Shutdown();
+                }
+            }
             if (!apiInitialized)
             {
                 ConfigurationVM configurationVM = new ConfigurationVM();
@@ -29,10 +37,10 @@ namespace ManagerApp.View
 
                 return;
             }
-            Initialize();
+            await Initialize();
             ShowLoginView();
         }
-        private void Initialize()
+        private async Task Initialize()
         {
             LoginVM loginVM = new LoginVM();
             ProductVM productVM = new ProductVM();
@@ -45,7 +53,6 @@ namespace ManagerApp.View
             loginV.Visibility = Visibility.Collapsed;
             configurationV.Visibility = Visibility.Collapsed;
             productV.Visibility = Visibility.Collapsed;
-
         }
 
         public void ShowLoginView()
@@ -63,5 +70,6 @@ namespace ManagerApp.View
             HideAllViews();
             productV.Visibility = Visibility.Visible;
         }
+
     }
 }

@@ -10,9 +10,9 @@ namespace CheckoutApp.ViewModel
 {
     public partial class ProductSearchVM : ObservableObject
     {
+        private Action<Product> _addToCart;
         [ObservableProperty]
         private ObservableCollection<Product> _products = new ObservableCollection<Product>(); 
-        private Action<Product> _addToCart;
         [ObservableProperty]
         private string? _searchText;
         [ObservableProperty]
@@ -33,7 +33,12 @@ namespace CheckoutApp.ViewModel
         [RelayCommand]
         public void AddToTransaction()
         {
-            if(SelectedProduct != null && _addToCart != null)
+            if(SelectedProduct == null)
+            {
+                MessageBox.Show("Veuillez sélectionner un produit avant de l'ajouter à la transaction.", "Aucun produit sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (SelectedProduct != null && _addToCart != null)
             {
                 _addToCart(SelectedProduct);
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();

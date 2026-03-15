@@ -10,14 +10,15 @@
              d:DataContext="{d:DesignInstance Type=viewmodel:TransactionVM}"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             Background="White"
-             mc:Ignorable="d" 
+             PreviewKeyDown="UserControl_PreviewKeyDown"
              PreviewTextInput="UserControl_PreviewTextInput"
-             PreviewKeyDown="UserControl_PreviewKeyDown">
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <materialDesign:DialogHost CloseOnClickAway="True" IsOpen="{Binding IsDialogOpen}" Identifier="dialogs">
+    <materialDesign:DialogHost CloseOnClickAway="True"
+                               Identifier="dialogs"
+                               IsOpen="{Binding IsDialogOpen}">
         <materialDesign:DialogHost.DialogContent>
             <StackPanel MinWidth="220" Margin="20">
                 <TextBlock Margin="10"
@@ -66,9 +67,9 @@
                     <Button Margin="5"
                             HorizontalAlignment="Left"
                             Background="{DynamicResource PrimaryHueMidBrush}"
+                            Command="{Binding LogoutCommand}"
                             Content="Déconnexion"
                             Foreground="Black"
-                            Command="{Binding LogoutCommand}"
                             Style="{StaticResource MaterialDesignRaisedButton}" />
 
                     <Label HorizontalAlignment="Center"
@@ -208,13 +209,13 @@
                            FontSize="14"
                            FontWeight="Bold" />
                     <TextBox x:Name="ScanBox"
+                             AcceptsReturn="False"
+                             Focusable="True"
+                             MaxLines="1"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Text="{Binding ScannedBarcode, UpdateSourceTrigger=PropertyChanged}"
-                             Visibility="Visible"
-                             AcceptsReturn="False"
                              TextWrapping="NoWrap"
-                             Focusable="True"
-                             MaxLines="1">
+                             Visibility="Visible">
                         <TextBox.InputBindings>
                             <KeyBinding Key="Enter" Command="{Binding ScanItemCommand}" />
                         </TextBox.InputBindings>
@@ -368,8 +369,8 @@
 
                         <!--  Ligne de séparation pour le total  -->
                         <Separator Grid.Row="3"
-                                   Margin="0,5"
                                    Grid.ColumnSpan="2"
+                                   Margin="0,5"
                                    Background="#DDDDDD" />
 
                         <TextBlock Grid.Row="4"
@@ -384,14 +385,13 @@
                                    FontWeight="Bold"
                                    Text="{Binding TransactionTotal, StringFormat={}{0:C2}}" />
                         <TextBlock Grid.Row="5"
-                           HorizontalAlignment="Left"
-                           Margin="0,2"
-                           FontSize="11"
-                           FontStyle="Italic"
-                           Foreground="Green"
-                           Text="Rabais employé de 10% est appliqué"
-                           Visibility="{Binding IsDiscountApplied,
-                        Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                   Margin="0,2"
+                                   HorizontalAlignment="Left"
+                                   FontSize="11"
+                                   FontStyle="Italic"
+                                   Foreground="Green"
+                                   Text="Rabais employé de 10% est appliqué"
+                                   Visibility="{Binding IsDiscountApplied, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </Grid>
                 </Border>
 

@@ -6,11 +6,15 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodel="clr-namespace:ManagerApp.ViewModel"
-        Title="MainWindow"
-        Width="800"
-        Height="450"
-        Background="White"
+        Title="Super Cchic - Admin"
+        Width="1280"
+        Height="720"
+        MinWidth="1280"
+        MinHeight="720"
+        Background="{DynamicResource MaterialDesignPaper}"
         Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow"
         mc:Ignorable="d">
     <Grid>
         <local:LoginV x:Name="loginV" Visibility="Visible" />

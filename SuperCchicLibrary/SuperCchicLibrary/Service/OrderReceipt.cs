@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using MailKit;
 
 namespace SuperCchicLibrary.Service
 {

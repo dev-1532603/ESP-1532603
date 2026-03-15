@@ -174,23 +174,23 @@ namespace SuperCchicLibrary.Service
                 }
             };
         }
-        public static async Task<List<Category>> GetCategories()
-        {
-            string url = "Categories";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(url))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsAsync<List<Category>>();
-                }
-                else
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"{response.ReasonPhrase}: {error}");
-                }
-            };
-        }
+        //public static async Task<List<Category>> GetCategories()
+        //{
+        //    string url = "Categories";
+        //    var request = new HttpRequestMessage(HttpMethod.Get, url);
+        //    using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(url))
+        //    {
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            return await response.Content.ReadAsAsync<List<Category>>();
+        //        }
+        //        else
+        //        {
+        //            var error = await response.Content.ReadAsStringAsync();
+        //            throw new Exception($"{response.ReasonPhrase}: {error}");
+        //        }
+        //    };
+        //}
         public static async Task<Order> PostOrder(OrderDTO dto)
         {
             string url = "Orders";

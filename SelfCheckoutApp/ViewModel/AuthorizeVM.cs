@@ -37,8 +37,6 @@ namespace SelfCheckoutApp.ViewModel
 
                 if (employee != null)
                 {
-                    Username = string.Empty;
-                    Password = string.Empty;
                     OnAuthorizationComplete?.Invoke(true);
                     OnAuthorizationComplete = null;
                     (Application.Current.MainWindow as MainWindow).ShowTransactionView();
@@ -46,13 +44,15 @@ namespace SelfCheckoutApp.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Autorisation invalide");
-                Username = string.Empty;
-                Password = string.Empty;
+                MessageBox.Show(ex.Message, "Échec d'autorisation", MessageBoxButton.OK, MessageBoxImage.Error);
+
                 OnAuthorizationComplete?.Invoke(false);
                 OnAuthorizationComplete = null;
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();
             }
+
+            Username = string.Empty;
+            Password = string.Empty;
         }
     }
 }

@@ -15,8 +15,9 @@ namespace SelfCheckoutApp.ViewModel
 {
     public partial class ProductSearchVM : ObservableObject
     {
-        private List<Product> _products = new List<Product>();
         private Action<Product> _addToCart;
+        [ObservableProperty]
+        private ObservableCollection<Product> _products = new ObservableCollection<Product>();
         [ObservableProperty]
         private string? _searchText;
         [ObservableProperty]
@@ -24,10 +25,10 @@ namespace SelfCheckoutApp.ViewModel
         [ObservableProperty]
         private Product? _selectedProduct;
 
-        public ProductSearchVM(List<Product> products)
+        public ProductSearchVM(ObservableCollection<Product> products)
         {
             SearchText = string.Empty;
-            _products = products;
+            Products = products;
             SearchResults = new ObservableCollection<Product>(products);
         }
         public void SetAddToCartAction(Action<Product> callback)
@@ -37,6 +38,11 @@ namespace SelfCheckoutApp.ViewModel
         [RelayCommand]
         public void AddToTransaction()
         {
+            if (SelectedProduct == null)
+            {
+                MessageBox.Show("Veuillez sélectionner un produit avant de l'ajouter à la transaction.", "Aucun produit sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             if (SelectedProduct != null && _addToCart != null)
             {
                 _addToCart(SelectedProduct);

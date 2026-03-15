@@ -31,18 +31,18 @@ namespace ManagerApp.ViewModel
 
             try
             {
-                //test
                 AuthenticationService.Instance.CurrentEmployee = await ApiProcessor.LoginAdmin(Username, Password);
-                MessageBox.Show("Connexion réussie.");
+                MessageBox.Show($"Bienvenue {AuthenticationService.Instance.CurrentEmployee.Name}!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
                 (Application.Current.MainWindow as MainWindow).ShowProductView();
 
-                Username = string.Empty;
-                Password = string.Empty;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Login invalide");
+                MessageBox.Show($"Erreur lors de la connexion : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);   
             }
+
+            Username = string.Empty;
+            Password = string.Empty;
         }
     }
 }

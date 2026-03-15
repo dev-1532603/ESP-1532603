@@ -5,20 +5,21 @@
         xmlns:local="clr-namespace:CheckoutApp.View"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="MainWindow"
+        Title="Super Cchic - Caisse"
         Width="1280"
         Height="720"
         MinWidth="1280"
         MinHeight="720"
-        Background="White"
+        Background="{DynamicResource MaterialDesignPaper}"
         Style="{StaticResource MaterialDesignWindow}"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow"
         mc:Ignorable="d">
     <Grid>
         <local:LoginV x:Name="loginV" Visibility="Visible" />
         <local:TransactionV x:Name="transactionV" Visibility="Collapsed" />
         <local:ProductSearchV x:Name="productSearchV" Visibility="Collapsed" />
         <local:DiscountV x:Name="discountV" Visibility="Collapsed" />
-        <local:ConfigurationV x:Name="configurationV" Visibility="Collapsed"/>
+        <local:ConfigurationV x:Name="configurationV" Visibility="Collapsed" />
     </Grid>
 </Window>

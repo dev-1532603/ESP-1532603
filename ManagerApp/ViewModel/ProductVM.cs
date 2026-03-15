@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ManagerApp.View;
 using SuperCchicLibrary;
 using SuperCchicLibrary.Service;
 using System;
@@ -17,7 +18,8 @@ namespace ManagerApp.ViewModel
     public partial class ProductVM : ObservableObject
     {
         private Func<Task>? _onDialogConfirm;
-        private List<Product> _products = new List<Product>();
+        [ObservableProperty]
+        private ObservableCollection<Product> _products = new ObservableCollection<Product>();
         [ObservableProperty]
         private ObservableCollection<Product> _searchResults = new ObservableCollection<Product>();
         [ObservableProperty]
@@ -41,22 +43,19 @@ namespace ManagerApp.ViewModel
         [ObservableProperty]
         private bool _dialogTaxable;
         [ObservableProperty]
-        private Subcategory? _dialogSubcategory;
-        [ObservableProperty]
         private int _dialogSubcategoryId;
 
         public ProductVM()
         {
             InitializeProductsAsync();
-
-            SearchResults = new ObservableCollection<Product>(_products);
         }
         private async Task InitializeProductsAsync()
         {
             try
             {
-                _subcategories = new ObservableCollection<Subcategory>(await ApiProcessor.GetSubcategories() ?? new List<Subcategory>());
-                _products = await ApiProcessor.GetProducts() ?? new List<Product>();
+                Subcategories = new ObservableCollection<Subcategory>(await ApiProcessor.GetSubcategories() ?? new List<Subcategory>());
+                Products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
+                SearchResults = new ObservableCollection<Product>(Products);
             }
             catch (Exception ex)
             {
@@ -83,6 +82,12 @@ namespace ManagerApp.ViewModel
                 SearchResults.Add(product);
             }
         }
+        [RelayCommand]
+        public void Logout()
+        {
+            AuthenticationService.Instance.CurrentEmployee = null;
+            (Application.Current.MainWindow as MainWindow).ShowLoginView();
+        }
 
         [RelayCommand]
         public void OpenAddDialog()
@@ -93,7 +98,6 @@ namespace ManagerApp.ViewModel
             DialogPrice = 0;
             DialogQuantityInStock = 0;
             DialogTaxable = false;
-            DialogSubcategory = null;
             DialogSubcategoryId = Subcategories?.FirstOrDefault()?.Id ?? 0; 
             IsDialogReadOnly = false;
             IsDialogEnabled = true;
@@ -115,8 +119,7 @@ namespace ManagerApp.ViewModel
             DialogPrice = SelectedProduct.Price;
             DialogQuantityInStock = SelectedProduct.QuantityInStock;
             DialogTaxable = SelectedProduct.Taxable;
-            DialogSubcategory = SelectedProduct.Subcategory;
-            DialogSubcategoryId = SelectedProduct.Subcategory.Id;
+            DialogSubcategoryId = SelectedProduct.IdSubcategory;
             IsDialogReadOnly = false;
             IsDialogEnabled = true;
             _onDialogConfirm = () => EditProduct();
@@ -137,7 +140,6 @@ namespace ManagerApp.ViewModel
             DialogPrice = SelectedProduct.Price;
             DialogQuantityInStock = SelectedProduct.QuantityInStock;
             DialogTaxable = SelectedProduct.Taxable;
-            DialogSubcategory = SelectedProduct.Subcategory;
             IsDialogReadOnly = true;
             IsDialogEnabled = false;
             _onDialogConfirm = () => DeleteProduct();
@@ -187,12 +189,16 @@ namespace ManagerApp.ViewModel
 
             try
             {
-                newProduct = await ApiProcessor.PostProduct(newProduct);
+                var postProduct = await ApiProcessor.PostProduct(newProduct);
 
-                _products.Add(newProduct);
+                postProduct.Subcategory = newProduct.Subcategory;
+
+                _products.Add(postProduct);
+
                 SearchResults = new ObservableCollection<Product>(_products);
+                BarcodeService.GenerateBarcodeLabel(postProduct);
 
-                BarcodeService.GenerateBarcodeLabel(newProduct);
+                MessageBox.Show("Produit ajouté avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -221,6 +227,8 @@ namespace ManagerApp.ViewModel
 
                 SelectedProduct = null;
                 SearchResults = new ObservableCollection<Product>(_products);
+
+                MessageBox.Show("Produit modifié avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -239,6 +247,7 @@ namespace ManagerApp.ViewModel
                 SelectedProduct = null;
                 SearchResults = new ObservableCollection<Product>(_products);
 
+                MessageBox.Show("Produit supprimé avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -247,14 +256,8 @@ namespace ManagerApp.ViewModel
         }
         private bool ValidateDialog()
         {
-            // si le dialog est en mode lecture, one ne valide pas les champs
-            if (IsDialogReadOnly) return true; 
+            if (IsDialogReadOnly) return true;
 
-            //if (string.IsNullOrWhiteSpace(DialogCode))
-            //{
-            //    MessageBox.Show("Le code est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //    return false;
-            //}
             if (string.IsNullOrWhiteSpace(DialogName))
             {
                 MessageBox.Show("Le nom est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -268,11 +271,6 @@ namespace ManagerApp.ViewModel
             if (DialogQuantityInStock < 0)
             {
                 MessageBox.Show("La quantité ne peut pas être négative.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (DialogSubcategory == null)
-            {
-                MessageBox.Show("Veuillez sélectionner une sous-catégorie.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             if (DialogSubcategoryId == 0)

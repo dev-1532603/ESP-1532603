@@ -21,48 +21,48 @@ namespace CheckoutApp.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ConfigurationVM _configurationVM;
-        public LoginVM _loginVM;
-        public TransactionVM _transactionVM;
-        public ProductSearchVM _productSearchVM;
-        public DiscountVM _discountVM;
+        public ConfigurationVM configurationVM;
+        public LoginVM loginVM;
+        public TransactionVM transactionVM;
+        public ProductSearchVM productSearchVM;
+        public DiscountVM discountVM;
         public MainWindow()
         {
             InitializeComponent();
             ApiSetup();
-            
         }
-        private void Initialize()
-        {
-            _loginVM = new LoginVM();
-            _transactionVM = new TransactionVM();
-            _productSearchVM = new ProductSearchVM(_transactionVM.Products);
-            _discountVM = new DiscountVM();
-
-            loginV.DataContext = _loginVM;
-            transactionV.DataContext = _transactionVM;
-            productSearchV.DataContext = _productSearchVM;
-            discountV.DataContext = _discountVM;
-
-            _productSearchVM.SetAddToCartAction(_transactionVM.AddToTransaction);
-            _discountVM.SetApplyTransactionDiscount(_transactionVM.ApplyTransactionDiscount);
-        }
-        private async void ApiSetup()
+        public async void ApiSetup()
         {
             bool apiInitialized = await ApiHelper.InitializeClient();
 
             if (!apiInitialized)
             {
-                _configurationVM = new ConfigurationVM();
-                configurationV.DataContext = _configurationVM;
+                configurationVM = new ConfigurationVM();
+                configurationV.DataContext = configurationVM;
 
                 ShowConfigurationView();
 
                 return;
             }
-            Initialize();
+            await Initialize();
             ShowLoginView();
         }
+        private async Task Initialize()
+        {
+            loginVM = new LoginVM();
+            transactionVM = new TransactionVM();
+            productSearchVM = new ProductSearchVM(await transactionVM.InitializeProductsAsync());
+            discountVM = new DiscountVM();
+
+            loginV.DataContext = loginVM;
+            transactionV.DataContext = transactionVM;
+            productSearchV.DataContext = productSearchVM;
+            discountV.DataContext = discountVM;
+
+            productSearchVM.SetAddToCartAction(transactionVM.AddToTransaction);
+            discountVM.SetApplyTransactionDiscount(transactionVM.ApplyTransactionDiscount);
+        }
+        
         private void HideAllViews()
         {
             loginV.Visibility = Visibility.Collapsed;
