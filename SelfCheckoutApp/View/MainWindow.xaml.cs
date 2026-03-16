@@ -16,8 +16,8 @@ namespace SelfCheckoutApp.View
         public ProductSearchVM productSearchVM;
         public MainWindow()
         {
-            ApiSetup();
             InitializeComponent();
+            ApiSetup();
         }
         public async void ApiSetup()
         {

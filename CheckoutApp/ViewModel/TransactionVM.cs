@@ -230,7 +230,7 @@ namespace CheckoutApp.ViewModel
                 OrderDTO orderDTO = new OrderDTO
                 {
                     TotalPrice = TransactionTotal,
-                    EmployeeId = 1,
+                    EmployeeId = AuthenticationService.Instance.CurrentEmployee.Id,
                     OrderDetails = orderdetails
                 };
 
