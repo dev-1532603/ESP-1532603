@@ -6,6 +6,7 @@ namespace SuperCchicLibrary.Service
 {
     public class QuestPdfService
     {
+        // Visuel généré par IA Claude
         public static void PrintReport(MonthlyReportDTO report)
         {
             QuestPDF.Settings.License = LicenseType.Community;
@@ -162,6 +163,7 @@ namespace SuperCchicLibrary.Service
             GenerateReceipt(orderReceipt.items, orderReceipt.comment, orderReceipt.subtotal, orderReceipt.tps, orderReceipt.tvq, orderReceipt.transactiontotal, orderReceipt.date, true);
         }
         // Méthode statique pour générer ET sauvegarder le PDF
+        // Visuel généré par IA Claude
         public static OrderReceipt GenerateReceipt(List<OrderDetailDTO> items, string comment, decimal subtotal, decimal tps, decimal tvq, decimal transactiontotal, DateTime date, bool isReprint = false)
         {
             QuestPDF.Settings.License = LicenseType.Community;

@@ -9,10 +9,10 @@ namespace CheckoutApp.ViewModel
 {
     public partial class ConfigurationVM : ObservableObject
     {
+        private bool _urlValid;
         [ObservableProperty]
         private string _apiBaseUrl;
 
-        private bool _urlValid;
         public ConfigurationVM()
         {
             _apiBaseUrl = string.Empty;

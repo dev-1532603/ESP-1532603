@@ -27,25 +27,6 @@ namespace CheckoutApp.ViewModel
 
             InitializeEmployeesAsync();
         }
-        public void SetApplyTransactionDiscount(Action<EmployeeDTO> callback)
-        {
-            _applyTransactionDiscount = callback;
-        }
-        [RelayCommand]
-        private void ApplyEmployeeDiscount()
-        {
-            if(SelectedEmployee == null)
-            {
-                MessageBox.Show("Veuillez sélectionner un employé pour appliquer la réduction.", "Aucun employé sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (SelectedEmployee != null && _applyTransactionDiscount != null)
-            {
-                _applyTransactionDiscount(SelectedEmployee);
-                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
-                SelectedEmployee = null;
-            }
-        }
         partial void OnSearchTextChanged(string? oldValue, string? newValue)
         {
             if (string.IsNullOrEmpty(newValue?.Trim()))
@@ -65,7 +46,6 @@ namespace CheckoutApp.ViewModel
             }
             catch (Exception ex)
             {
-                // Gérer l'erreur (log, message utilisateur, etc.)
                 Console.WriteLine($"Erreur lors du chargement des employés: {ex.Message}");
             }
         }
@@ -79,5 +59,24 @@ namespace CheckoutApp.ViewModel
                 SearchResults.Add(product);
             }
         }
+        public void SetApplyTransactionDiscount(Action<EmployeeDTO> callback)
+        {
+            _applyTransactionDiscount = callback;
+        }
+        [RelayCommand]
+        private void ApplyEmployeeDiscount()
+        {
+            if(SelectedEmployee == null)
+            {
+                MessageBox.Show("Veuillez sélectionner un employé pour appliquer la réduction.", "Aucun employé sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (SelectedEmployee != null && _applyTransactionDiscount != null)
+            {
+                _applyTransactionDiscount(SelectedEmployee);
+                (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+                SelectedEmployee = null;
+            }
+        } 
     }
 }

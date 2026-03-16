@@ -31,6 +31,26 @@ namespace SelfCheckoutApp.ViewModel
             Products = products;
             SearchResults = new ObservableCollection<Product>(products);
         }
+        partial void OnSearchTextChanged(string? oldValue, string? newValue)
+        {
+            if (string.IsNullOrEmpty(newValue?.Trim()))
+            {
+                SearchResults = new ObservableCollection<Product>(_products);
+                return;
+            }
+
+            SearchProducts(SearchText);
+        }
+        private void SearchProducts(string searchText)
+        {
+            var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower()) || p.Code.Contains(searchText.ToLower())).ToList();
+
+            SearchResults.Clear();
+            foreach (var product in filtered)
+            {
+                SearchResults.Add(product);
+            }
+        }
         public void SetAddToCartAction(Action<Product> callback)
         {
             _addToCart = callback;
@@ -47,28 +67,6 @@ namespace SelfCheckoutApp.ViewModel
             {
                 _addToCart(SelectedProduct);
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();
-            }
-        }
-
-        partial void OnSearchTextChanged(string? oldValue, string? newValue)
-        {
-            if (string.IsNullOrEmpty(newValue?.Trim()))
-            {
-                SearchResults = new ObservableCollection<Product>(_products);
-                return;
-            }
-
-            SearchProducts(SearchText);
-        }
-
-        private void SearchProducts(string searchText)
-        {
-            var filtered = _products.Where(p => p.Name.ToLower().Contains(searchText.ToLower()) || p.Code.Contains(searchText.ToLower())).ToList();
-
-            SearchResults.Clear();
-            foreach (var product in filtered)
-            {
-                SearchResults.Add(product);
             }
         }
     }

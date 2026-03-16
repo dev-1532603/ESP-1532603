@@ -48,28 +48,6 @@ namespace SelfCheckoutApp.ViewModel
 
             TransactionItems.CollectionChanged += (s, e) => UpdateTransaction();
         }
-
-        public async Task<ObservableCollection<Product>> InitializeProductsAsync()
-        {
-            try
-            {
-                Products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
-
-                // Générer les étiquettes de code-barres pour chaque produit
-                // pour accès dans bin debug
-                foreach (var item in _products)
-                {
-                    BarcodeService.GenerateBarcodeLabel(item);
-                }
-
-                return Products;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
-                return Products = new ObservableCollection<Product>();
-            }
-        }
         private void UpdateTransaction()
         {
             decimal taxableSubtotal = TransactionItems.Where(i => i.Taxable).Sum(i => i.TotalPrice);
@@ -91,7 +69,32 @@ namespace SelfCheckoutApp.ViewModel
             }
             SelectedTransactionItem = null;
         }
-        //Callback method
+        private void AuthorizeAction(Action<bool> onComplete)
+        {
+            (Application.Current.MainWindow as MainWindow).ShowAuthorizeView(onComplete);
+        }
+        public async Task<ObservableCollection<Product>> InitializeProductsAsync()
+        {
+            try
+            {
+                Products = new ObservableCollection<Product>(await ApiProcessor.GetProducts() ?? new List<Product>());
+
+                // Générer les étiquettes de code-barres pour chaque produit
+                // pour accès dans bin debug
+                foreach (var item in _products)
+                {
+                    BarcodeService.GenerateBarcodeLabel(item);
+                }
+
+                return Products;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
+                return Products = new ObservableCollection<Product>();
+            }
+        }
+        // Callback method for ProductSearch
         public void AddToTransaction(Product product)
         {
             TransactionItem item = new TransactionItem(product.Id, product.Code, product.Name, 1, product.Price, product.Taxable);
@@ -249,10 +252,6 @@ namespace SelfCheckoutApp.ViewModel
                 }
             }
             ScannedBarcode = "";
-        }
-        private void AuthorizeAction(Action<bool> onComplete)
-        {
-            (Application.Current.MainWindow as MainWindow).ShowAuthorizeView(onComplete);
         }
     }
 }

@@ -48,7 +48,32 @@ namespace CheckoutApp.ViewModel
 
             TransactionItems.CollectionChanged += (s, e) => UpdateTransaction();
         }
-
+        private void UpdateTransaction()
+        {
+            decimal taxableSubtotal = TransactionItems.Where(i => i.Taxable).Sum(i => i.TotalPrice);
+            Subtotal = TransactionItems.Sum(i => i.TotalPrice);
+            if (IsDiscountApplied)
+            {
+                Subtotal *= DISCOUNT;
+            }
+            Tps = taxableSubtotal * TPSAMOUNT;
+            Tvq = taxableSubtotal * TVQAMOUNT;
+            TransactionTotal = Subtotal + Tps + Tvq;
+        }
+        private void UpdateItemQuantity(int newQuantity)
+        {
+            if (SelectedTransactionItem == null)
+            {
+                MessageBox.Show("Aucun produit sélectionné pour modifier la quantité.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
+            {
+                SelectedTransactionItem.Quantity = newQuantity;
+                UpdateTransaction();
+            }
+            SelectedTransactionItem = null;
+        }
         public async Task<ObservableCollection<Product>> InitializeProductsAsync()
         {
             try
@@ -70,31 +95,18 @@ namespace CheckoutApp.ViewModel
                 return Products = new ObservableCollection<Product>();
             }
         }
-        private void UpdateTransaction()
+       
+        public void EnterProductManually(string code)
         {
-            decimal taxableSubtotal = TransactionItems.Where(i => i.Taxable).Sum(i => i.TotalPrice);
-            Subtotal = TransactionItems.Sum(i => i.TotalPrice);
-            if (IsDiscountApplied)
+            Product product = _products.FirstOrDefault(p => p.Code == code);
+
+            if (product == null)
             {
-                Subtotal *= DISCOUNT;
-            }
-            Tps = taxableSubtotal * TPSAMOUNT;
-            Tvq = taxableSubtotal * TVQAMOUNT;
-            TransactionTotal = Subtotal + Tps + Tvq;
-        }
-        private void UpdateItemQuantity(int newQuantity)
-        {
-            if(SelectedTransactionItem == null)
-            {
-                MessageBox.Show("Aucun produit sélectionné pour modifier la quantité.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Produit introuvable avec ce code.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
-            {
-                SelectedTransactionItem.Quantity = newQuantity;
-                UpdateTransaction();
-            }
-            SelectedTransactionItem = null;
+            
+            AddToTransaction(product);
         }
         //Callback method
         public void AddToTransaction(Product product)
@@ -115,18 +127,6 @@ namespace CheckoutApp.ViewModel
 
             MessageBox.Show("Le produit a été ajouté avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
 
-        }
-        public void EnterProductManually(string code)
-        {
-            Product product = _products.FirstOrDefault(p => p.Code == code);
-
-            if (product == null)
-            {
-                MessageBox.Show("Produit introuvable avec ce code.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            
-            AddToTransaction(product);
         }
         //Callback method
         public void ApplyTransactionDiscount(EmployeeDTO employee)

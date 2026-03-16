@@ -49,6 +49,17 @@ namespace ManagerApp.ViewModel
         {
             InitializeProductsAsync();
         }
+        partial void OnSearchTextChanged(string? oldValue, string? newValue)
+        {
+            if (string.IsNullOrEmpty(newValue?.Trim()))
+            {
+                SearchResults = new ObservableCollection<Product>(_products);
+                return;
+            }
+
+            SearchProducts(SearchText);
+        }
+        // Initialisation des produits et sous-catégories depuis l'API
         private async Task InitializeProductsAsync()
         {
             try
@@ -62,15 +73,113 @@ namespace ManagerApp.ViewModel
                 Console.WriteLine($"Erreur lors du chargement des produits: {ex.Message}");
             }
         }
-        partial void OnSearchTextChanged(string? oldValue, string? newValue)
+        private async Task AddProduct()
         {
-            if (string.IsNullOrEmpty(newValue?.Trim()))
+            // Formatting 
+            var newProduct = new Product
             {
+                Name = char.ToUpper(DialogName[0]) + DialogName.Substring(1),
+                Price = DialogPrice,
+                QuantityInStock = DialogQuantityInStock,
+                Taxable = DialogTaxable,
+                IdSubcategory = DialogSubcategoryId,
+                Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId),
+            };
+
+            try
+            {
+                var postProduct = await ApiProcessor.PostProduct(newProduct);
+
+                postProduct.Subcategory = newProduct.Subcategory;
+
+                _products.Add(postProduct);
+
                 SearchResults = new ObservableCollection<Product>(_products);
-                return;
+                BarcodeService.GenerateBarcodeLabel(postProduct);
+
+                MessageBox.Show("Produit ajouté avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de l'ajout du produit: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            SearchProducts(SearchText);
+        }
+        private async Task EditProduct()
+        {
+            if (SelectedProduct == null) return;
+
+            Product? product = _products.FirstOrDefault(p => p.Id == SelectedProduct.Id);
+
+            if (product == null) return;
+
+            product.Name = DialogName;
+            product.Price = DialogPrice;
+            product.QuantityInStock = DialogQuantityInStock;
+            product.Taxable = DialogTaxable;
+            product.IdSubcategory = DialogSubcategoryId;
+            product.Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId);
+
+            try
+            {
+                await ApiProcessor.PutProduct(product);
+
+                SelectedProduct = null;
+                SearchResults = new ObservableCollection<Product>(_products);
+
+                MessageBox.Show("Produit modifié avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de la modification du produit: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private async Task DeleteProduct()
+        {
+            if (SelectedProduct == null) return;
+
+            try
+            {
+                await ApiProcessor.DeleteProduct(SelectedProduct.Id);
+
+                _products.Remove(SelectedProduct);
+                SelectedProduct = null;
+                SearchResults = new ObservableCollection<Product>(_products);
+
+                MessageBox.Show("Produit supprimé avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de la suppression du produit: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        // Validation des champs du dialogue d'ajout/modification
+        private bool ValidateDialog()
+        {
+            if (IsDialogReadOnly) return true;
+
+            if (string.IsNullOrWhiteSpace(DialogName))
+            {
+                MessageBox.Show("Le nom est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (DialogPrice <= 0)
+            {
+                MessageBox.Show("Le prix doit être supérieur à 0.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (DialogQuantityInStock < 0)
+            {
+                MessageBox.Show("La quantité ne peut pas être négative.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (DialogSubcategoryId == 0)
+            {
+                MessageBox.Show("Veuillez sélectionner une sous-catégorie.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
         }
         private void SearchProducts(string searchText)
         {
@@ -187,112 +296,6 @@ namespace ManagerApp.ViewModel
         public void CancelDialog()
         {
             IsDialogOpen = false;
-        }
-        private async Task AddProduct()
-        {
-            var newProduct = new Product
-            {
-                Name = char.ToUpper(DialogName[0]) + DialogName.Substring(1),
-                Price = DialogPrice,
-                QuantityInStock = DialogQuantityInStock,
-                Taxable = DialogTaxable,
-                IdSubcategory = DialogSubcategoryId,
-                Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId),
-            };
-
-            try
-            {
-                var postProduct = await ApiProcessor.PostProduct(newProduct);
-
-                postProduct.Subcategory = newProduct.Subcategory;
-
-                _products.Add(postProduct);
-
-                SearchResults = new ObservableCollection<Product>(_products);
-                BarcodeService.GenerateBarcodeLabel(postProduct);
-
-                MessageBox.Show("Produit ajouté avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors de l'ajout du produit: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-        private async Task EditProduct()
-        {
-            if (SelectedProduct == null) return;
-
-            Product? product = _products.FirstOrDefault(p => p.Id == SelectedProduct.Id);
-
-            if (product == null) return;
-
-            product.Name = DialogName;
-            product.Price = DialogPrice;
-            product.QuantityInStock = DialogQuantityInStock;
-            product.Taxable = DialogTaxable;
-            product.IdSubcategory = DialogSubcategoryId;
-            product.Subcategory = Subcategories?.FirstOrDefault(s => s.Id == DialogSubcategoryId);
-
-            try
-            {
-                await ApiProcessor.PutProduct(product);
-
-                SelectedProduct = null;
-                SearchResults = new ObservableCollection<Product>(_products);
-
-                MessageBox.Show("Produit modifié avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors de la modification du produit: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        private async Task DeleteProduct()
-        {
-            if (SelectedProduct == null) return;
-
-            try
-            {
-                await ApiProcessor.DeleteProduct(SelectedProduct.Id);
-
-                _products.Remove(SelectedProduct);
-                SelectedProduct = null;
-                SearchResults = new ObservableCollection<Product>(_products);
-
-                MessageBox.Show("Produit supprimé avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors de la suppression du produit: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        private bool ValidateDialog()
-        {
-            if (IsDialogReadOnly) return true;
-
-            if (string.IsNullOrWhiteSpace(DialogName))
-            {
-                MessageBox.Show("Le nom est obligatoire.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (DialogPrice <= 0)
-            {
-                MessageBox.Show("Le prix doit être supérieur à 0.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (DialogQuantityInStock < 0)
-            {
-                MessageBox.Show("La quantité ne peut pas être négative.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (DialogSubcategoryId == 0)
-            {
-                MessageBox.Show("Veuillez sélectionner une sous-catégorie.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-
-            return true;
         }
     }
 }
