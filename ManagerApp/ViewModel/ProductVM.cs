@@ -156,11 +156,19 @@ namespace ManagerApp.ViewModel
 
             if (result == MessageBoxResult.Yes)
             {
-                var monthlyReport = await ApiProcessor.GetReport();
-
-                if (monthlyReport != null)
+                try
                 {
-                    QuestPdfService.PrintReport(monthlyReport);
+                    var monthlyReport = await ApiProcessor.GetReport();
+
+                    if (monthlyReport != null)
+                    {
+                        QuestPdfService.PrintReport(monthlyReport);
+                        MessageBox.Show("Le rapport mensuel a été généré avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Un problème est survenu lors de la génération du rapport", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

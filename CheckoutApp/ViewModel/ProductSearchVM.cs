@@ -29,6 +29,7 @@ namespace CheckoutApp.ViewModel
         public void SetAddToCartAction(Action<Product> callback)
         {
             _addToCart = callback;
+
         }
         [RelayCommand]
         public void AddToTransaction()
@@ -42,6 +43,7 @@ namespace CheckoutApp.ViewModel
             {
                 _addToCart(SelectedProduct);
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+                SelectedProduct = null;
             }
         }
 

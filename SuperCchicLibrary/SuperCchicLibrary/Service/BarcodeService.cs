@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using ZXing;
 using ZXing.Common;
@@ -10,18 +9,6 @@ namespace SuperCchicLibrary.Service
     public class BarcodeService
     {
         const string COMPANYTPREFIX = "12345";
-        //WHEN I USED IRONBARCODE
-        //public static void GenerateBarcodeLabel(Product product)
-        //{
-        //    var font = new Font("Arial", FontStyle.Regular, 24f);
-        //    string formattedCode = product.Code.Substring(0, 11);
-        //    GeneratedBarcode barcode = BarcodeWriter.CreateBarcode(formattedCode, BarcodeWriterEncoding.UPCA);
-        //    barcode.AddAnnotationTextAboveBarcode(product.Name, font, Color.Black, 10);
-        //    barcode.AddBarcodeValueTextBelowBarcode(10);
-        //    barcode.ResizeTo(400, 120);
-        //    barcode.SetMargins(10);
-        //    barcode.SaveAsImage($"{product.Name}.png");
-        //}
         public static void GenerateBarcodeLabel(Product product)
         {
             string code = product.Code.Substring(0, 11);

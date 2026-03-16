@@ -1,7 +1,4 @@
-﻿
-using System.Transactions;
-
-namespace SuperCchicLibrary
+﻿namespace SuperCchicLibrary
 {
     public class LoginRequestDTO
     {

@@ -112,6 +112,9 @@ namespace CheckoutApp.ViewModel
             {
                 TransactionItems.Add(item);
             }
+
+            MessageBox.Show("Le produit a été ajouté avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+
         }
         public void EnterProductManually(string code)
         {
@@ -130,6 +133,7 @@ namespace CheckoutApp.ViewModel
         {
             IsDiscountApplied = true;
             UpdateTransaction();
+
         }
         [RelayCommand]
         public void ClearTransaction()
@@ -187,7 +191,7 @@ namespace CheckoutApp.ViewModel
                 if (!string.IsNullOrWhiteSpace(result))
                 {
                     TransactionComment = result;
-
+                    IsDialogOpen = false;
                 }
             };
             IsDialogOpen = true;
@@ -232,7 +236,7 @@ namespace CheckoutApp.ViewModel
 
                 var order = await ApiProcessor.PostOrder(orderDTO);
 
-                _transactionHistory.Add(OrderReceipt.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
+                _transactionHistory.Add(QuestPdfService.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
 
                 MessageBox.Show("Transaction complétée avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -264,6 +268,8 @@ namespace CheckoutApp.ViewModel
             if (SelectedTransactionItem != null && TransactionItems.Contains(SelectedTransactionItem))
             {
                 TransactionItems.Remove(SelectedTransactionItem);
+                MessageBox.Show("Le produit a été retiré avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+
             }
             SelectedTransactionItem = null;
         }
@@ -276,7 +282,7 @@ namespace CheckoutApp.ViewModel
                 return;
             }
 
-            OrderReceipt.PrintReceipt(_transactionHistory.Last());
+            QuestPdfService.PrintReceipt(_transactionHistory.Last());
         }
         [RelayCommand]
         public void ScanItem()

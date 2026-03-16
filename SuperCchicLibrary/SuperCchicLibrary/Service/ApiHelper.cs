@@ -1,5 +1,4 @@
-﻿
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using Newtonsoft.Json;
 namespace SuperCchicLibrary.Service
 {
@@ -54,6 +53,7 @@ namespace SuperCchicLibrary.Service
         }
         public static async Task<bool> SetupConfig(string url)
         {
+           
             if (await GetApiStatus(url))
             {
                 await File.WriteAllTextAsync(CONFIG_PATH, JsonConvert.SerializeObject(url));

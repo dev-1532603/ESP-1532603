@@ -1,19 +1,8 @@
 ﻿using SelfCheckoutApp.ViewModel;
 using SuperCchicLibrary.Service;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace SelfCheckoutApp.View
 {
@@ -27,13 +16,21 @@ namespace SelfCheckoutApp.View
         public ProductSearchVM productSearchVM;
         public MainWindow()
         {
-            InitializeComponent();
             ApiSetup();
+            InitializeComponent();
         }
-        private async void ApiSetup()
+        public async void ApiSetup()
         {
             bool apiInitialized = await ApiHelper.InitializeClient();
 
+            if (apiInitialized)
+            {
+                if (!await ApiHelper.GetApiStatus(ApiHelper.apiBaseAddress))
+                {
+                    MessageBox.Show("Erreur de connexion à l'API, veuillez vérifier les configurations.", "API Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Shutdown();
+                }
+            }
             if (!apiInitialized)
             {
                 ConfigurationVM configurationVM = new ConfigurationVM();

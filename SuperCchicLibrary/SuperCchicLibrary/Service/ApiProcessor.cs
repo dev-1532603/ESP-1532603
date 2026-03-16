@@ -1,11 +1,5 @@
-﻿using SuperCchicLibrary.Service;
-using Newtonsoft.Json;
-using SuperCchicLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperCchicLibrary.Service
 {
@@ -60,8 +54,11 @@ namespace SuperCchicLibrary.Service
                 {
                     return await response.Content.ReadAsAsync<List<Product>>();
                 }
-
-                throw new Exception(response.ReasonPhrase);
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"{response.ReasonPhrase}: {error}");
+                }
             };
         }
         public static async Task<Product> PostProduct(Product product)
@@ -121,24 +118,6 @@ namespace SuperCchicLibrary.Service
                 }
             }
             ;
-        }
-
-        public static async Task<List<Product>> SearchProducts(string searchText)
-        {
-            string url = $"Products/Search/{searchText}";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(url))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsAsync<List<Product>>();
-                }
-                else
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"{response.ReasonPhrase}: {error}");
-                }
-            };
         }
         public static async Task<List<EmployeeDTO>> GetEmployees()
         {

@@ -47,7 +47,7 @@ namespace SuperCchicAPI.Controllers
             _context.Order_Details.AddRange(orderDetails);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            return order;
         }
         [HttpGet]
         [Route("Report")]

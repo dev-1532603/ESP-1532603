@@ -43,6 +43,7 @@ namespace CheckoutApp.ViewModel
             {
                 _applyTransactionDiscount(SelectedEmployee);
                 (Application.Current.MainWindow as MainWindow).ShowTransactionView();
+                SelectedEmployee = null;
             }
         }
         partial void OnSearchTextChanged(string? oldValue, string? newValue)
@@ -70,7 +71,7 @@ namespace CheckoutApp.ViewModel
         }
         private void SearchEmployees(string searchText)
         {
-            var filtered = _employees.Where(p => p.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            var filtered = _employees.Where(p => p.Name.ToLower().Contains(searchText.ToLower()) || p.Username.ToLower().Contains(searchText.ToLower())).ToList();
 
             SearchResults.Clear();
             foreach (var product in filtered)

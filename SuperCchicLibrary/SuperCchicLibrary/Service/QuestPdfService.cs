@@ -10,6 +10,8 @@ namespace SuperCchicLibrary.Service
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
+            string filename = $"rapport_mensuel.pdf";
+
             var document = Document.Create(container =>
             {
                 container.Page(page =>
@@ -46,7 +48,7 @@ namespace SuperCchicLibrary.Service
                 });
             });
 
-            document.GeneratePdf("rapport_mensuel.pdf");
+            document.GeneratePdf(filename);
         }
         static void ComposeHeader(IContainer container)
         {
@@ -96,15 +98,15 @@ namespace SuperCchicLibrary.Service
         static void ComposeDailyTable(IContainer container, List<DailyReportDTO> dailyReports)
         {
             var dayNames = new Dictionary<DayOfWeek, string>
-    {
-        { DayOfWeek.Monday,    "Lundi"    },
-        { DayOfWeek.Tuesday,   "Mardi"    },
-        { DayOfWeek.Wednesday, "Mercredi" },
-        { DayOfWeek.Thursday,  "Jeudi"    },
-        { DayOfWeek.Friday,    "Vendredi" },
-        { DayOfWeek.Saturday,  "Samedi"   },
-        { DayOfWeek.Sunday,    "Dimanche" },
-    };
+            {
+                { DayOfWeek.Monday,    "Lundi"    },
+                { DayOfWeek.Tuesday,   "Mardi"    },
+                { DayOfWeek.Wednesday, "Mercredi" },
+                { DayOfWeek.Thursday,  "Jeudi"    },
+                { DayOfWeek.Friday,    "Vendredi" },
+                { DayOfWeek.Saturday,  "Samedi"   },
+                { DayOfWeek.Sunday,    "Dimanche" },
+            };
 
             container.Column(col =>
             {

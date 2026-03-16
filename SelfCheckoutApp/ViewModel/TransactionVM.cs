@@ -190,7 +190,7 @@ namespace SelfCheckoutApp.ViewModel
 
                 var order = await ApiProcessor.PostOrder(orderDTO);
 
-                _transactionHistory.Add(OrderReceipt.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
+                _transactionHistory.Add(QuestPdfService.GenerateReceipt(orderdetails, TransactionComment, Subtotal, Tps, Tvq, TransactionTotal, order.Date));
 
                 MessageBox.Show("Transaction complétée avec succès!", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
 
