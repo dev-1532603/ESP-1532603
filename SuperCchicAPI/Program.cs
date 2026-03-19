@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SuperCchicAPI;
 using SuperCchicAPI.Data.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +11,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var iniPath = Path.Combine(AppContext.BaseDirectory, "config.ini");
+var db = IniReader.LoadDatabaseSettings(iniPath);
+
 builder.Services.AddDbContext<SuperCchicContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("Default");
+    var connectionString =
+    $"Server={db.Server};Port={db.Port};Database={db.Database};User={db.User};Password={db.Password};";
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
